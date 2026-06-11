@@ -1,0 +1,231 @@
+{
+  "version": "AETHER-RAMI V4",
+  "created": "2026-06-03 04:33:37",
+  "numpy": "2.0.2",
+  "device": "cuda",
+  "on_gpu": true,
+  "primary_task": "BBBP",
+  "n_molecules": 1966,
+  "all_tasks": {
+    "BBB_Builtin": {
+      "n": 30,
+      "type": "cls",
+      "source": "builtin"
+    },
+    "BBBP": {
+      "n": 1966,
+      "type": "cls",
+      "source": "bbbp.zip"
+    },
+    "BACE": {
+      "n": 1513,
+      "type": "cls",
+      "source": "Bace_Descriptors.zip"
+    },
+    "ClinTox": {
+      "n": 1451,
+      "type": "cls",
+      "source": "Clintox_Descriptors.zip"
+    },
+    "HIV": {
+      "n": 14932,
+      "type": "cls",
+      "source": "hiv.zip"
+    },
+    "Tox21": {
+      "n": 7708,
+      "type": "cls",
+      "source": "tox21.zip"
+    },
+    "MUV": {
+      "n": 14999,
+      "type": "cls",
+      "source": "muv.csv.gz"
+    },
+    "PCBA": {
+      "n": 14998,
+      "type": "cls",
+      "source": "pcba.zip"
+    },
+    "ESOL": {
+      "n": 1117,
+      "type": "reg",
+      "source": "delaney-processed.zip"
+    },
+    "Lipophilicity": {
+      "n": 4200,
+      "type": "reg",
+      "source": "lipophilicity.zip"
+    },
+    "Bace_Desc": {
+      "n": 1513,
+      "type": "cls",
+      "source": "Bace_Descriptors.zip"
+    },
+    "Clintox_Desc": {
+      "n": 1451,
+      "type": "cls",
+      "source": "Clintox_Descriptors.zip"
+    },
+    "Lipophilicity_Desc": {
+      "n": 4200,
+      "type": "reg",
+      "source": "Lipophilicity_Descriptors.zip"
+    }
+  },
+  "dti_datasets": {
+    "BindingDTA_Kd": {
+      "n": 1959,
+      "type": "reg_dti"
+    },
+    "BindingDTA_Ki": {
+      "n": 8493,
+      "type": "reg_dti"
+    },
+    "BindingDTA_IC50": {
+      "n": 10629,
+      "type": "reg_dti"
+    },
+    "BindingDTA_EC50": {
+      "n": 10737,
+      "type": "reg_dti"
+    }
+  },
+  "regression_results": {
+    "ESOL_measured log solubility in mols per litre": {
+      "rmse": 0.79411,
+      "r2": 0.845482,
+      "mae": 0.542135
+    },
+    "Lipophilicity_exp": {
+      "rmse": 0.666627,
+      "r2": 0.690476,
+      "mae": 0.495303
+    },
+    "Lipophilicity_Desc_exp": {
+      "rmse": 0.666627,
+      "r2": 0.690476,
+      "mae": 0.495303
+    },
+    "BindingDTA_Kd": {
+      "rmse": 247366.178759,
+      "r2": -0.393861,
+      "mae": 73738.578176
+    },
+    "BindingDTA_Ki": {
+      "rmse": 1.015305,
+      "r2": 0.252306,
+      "mae": 0.783301
+    },
+    "BindingDTA_IC50": {
+      "rmse": 69159.219878,
+      "r2": -3.053477,
+      "mae": 22732.368455
+    },
+    "BindingDTA_EC50": {
+      "rmse": 1.444266,
+      "r2": 0.049987,
+      "mae": 1.180475
+    }
+  },
+  "best_cls_model": "Random Forest",
+  "best_auc": 0.800892,
+  "benchmark": {
+    "Foundation GT": {
+      "ROC-AUC": 0.5,
+      "F1": 0.0,
+      "AP": 0.5,
+      "MCC": 0.0
+    },
+    "MolGCN": {
+      "ROC-AUC": 0.5,
+      "F1": 0.0,
+      "AP": 0.5,
+      "MCC": 0.0
+    },
+    "MultiTask GT": {
+      "ROC-AUC": 0.5,
+      "F1": 0.0,
+      "AP": 0.5,
+      "MCC": 0.0
+    },
+    "Random Forest": {
+      "ROC-AUC": 0.800892,
+      "F1": 0.722628,
+      "AP": 0.769092,
+      "MCC": 0.483841
+    },
+    "Extra Trees": {
+      "ROC-AUC": 0.794874,
+      "F1": 0.706767,
+      "AP": 0.771705,
+      "MCC": 0.466095
+    },
+    "LogReg": {
+      "ROC-AUC": 0.766778,
+      "F1": 0.672131,
+      "AP": 0.700589,
+      "MCC": 0.447909
+    },
+    "XGBoost": {
+      "ROC-AUC": 0.785694,
+      "F1": 0.721088,
+      "AP": 0.749992,
+      "MCC": 0.459152
+    },
+    "LightGBM": {
+      "ROC-AUC": 0.778676,
+      "F1": 0.706349,
+      "AP": 0.721716,
+      "MCC": 0.489969
+    }
+  },
+  "protein_targets": {
+    "EGFR": {
+      "pdb_id": "1M17",
+      "class": "Kinase",
+      "n_residues": 312,
+      "synthetic": false
+    },
+    "BRAF": {
+      "pdb_id": "1UWH",
+      "class": "Kinase",
+      "n_residues": 528,
+      "synthetic": false
+    },
+    "CDK2": {
+      "pdb_id": "1HCK",
+      "class": "Cell Cycle Kinase",
+      "n_residues": 294,
+      "synthetic": false
+    },
+    "HIV_Protease": {
+      "pdb_id": "1HVR",
+      "class": "Viral Aspartyl Protease",
+      "n_residues": 196,
+      "synthetic": false
+    },
+    "AChE": {
+      "pdb_id": "4EY7",
+      "class": "Neural Hydrolase",
+      "n_residues": 1065,
+      "synthetic": false
+    }
+  },
+  "bugs_fixed": [
+    "info_nce_fp16_overflow_fixed (cast to float32, use -1e4 not -1e9)",
+    "UNIFIED_FP_DIM_computed_after_HAS_MORDRED",
+    "mordred_import_smoke_test_guard",
+    "scaffold_split_one_class_guard",
+    "shap_array_truth_value_fixed",
+    "tsne_max_iter_n_iter_compat_fixed",
+    "pksz_dict_syntax_fixed",
+    "predict_molecule_uses_stored_sklearn_models",
+    "model_export_uses_stored_references",
+    "amp_device_string_guard",
+    "gnn_train_tgt_pred_shape_mismatch_guard",
+    "bald_pool_index_out_of_bounds_guard",
+    "calibration_curve_n_bins_guard",
+    "all_plt_close_in_finally_blocks"
+  ]
+}
