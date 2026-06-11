@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CDK2 Interaction Network</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        #network {
+            width: 100vw;
+            height: 100vh;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="legend">
+        <div style="font-weight:bold;margin-bottom:8px;">Interaction Types</div>
+        <div class="legend-item"><div class="dot" style="background:#f59e0b;border-radius:0;"></div> Ligand (MG)</div>
+        <div class="legend-item"><div class="dot" style="background:#10b981;"></div> Hydrogen Bond</div>
+        <div class="legend-item"><div class="dot" style="background:#3b82f6;"></div> Hydrophobic Contact</div>
+    </div>
+    <div id="network"></div>
+    <script>
+        const nodes = new vis.DataSet([{"id": "ligand", "label": "MG", "color": "#f59e0b", "size": 30, "shape": "diamond"}, {"id": "res_0", "label": "ASN132", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_1", "label": "ASP145", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_2", "label": "THR14", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_3", "label": "TYR15", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_4", "label": "ASP127", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_5", "label": "LYS129", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_6", "label": "GLN131", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_7", "label": "LYS33", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_8", "label": "GLY13", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_9", "label": "VAL18", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_10", "label": "ILE10", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_11", "label": "ASP86", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_12", "label": "ALA31", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_13", "label": "LEU134", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_14", "label": "PHE82", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_15", "label": "GLU81", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_16", "label": "LEU83", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_17", "label": "LEU83", "color": "#3b82f6", "size": 15, "shape": "dot"}]);
+        const edges = new vis.DataSet([{"from": "ligand", "to": "res_0", "label": "H-Bond (2.93\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_1", "label": "H-Bond (2.57\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_2", "label": "H-Bond (2.84\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_3", "label": "H-Bond (3.49\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_4", "label": "H-Bond (3.16\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_5", "label": "H-Bond (2.97\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_6", "label": "H-Bond (2.97\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_7", "label": "H-Bond (2.91\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_8", "label": "H-Bond (3.32\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_9", "label": "Hydrophobic (4.24\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_10", "label": "Hydrophobic (4.13\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_11", "label": "H-Bond (2.94\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_12", "label": "Hydrophobic (4.05\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_13", "label": "Hydrophobic (3.67\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_14", "label": "Hydrophobic (4.44\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_15", "label": "H-Bond (2.79\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_16", "label": "H-Bond (3.28\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_17", "label": "Hydrophobic (4.39\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}]);
+        const container = document.getElementById('network');
+        const data = { nodes: nodes, edges: edges };
+        const options = {
+            nodes: {
+                font: { color: '#ffffff', size: 12 }
+            },
+            edges: {
+                font: { color: '#9ca3af', size: 10, align: 'middle' },
+                color: { color: '#4b5563' }
+            },
+            physics: {
+                stabilization: true,
+                barnesHut: {
+                    gravitationalConstant: -2000,
+                    centralGravity: 0.3,
+                    springLength: 95
+                }
+            }
+        };
+        const network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>

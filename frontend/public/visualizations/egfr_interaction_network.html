@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>EGFR Interaction Network</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        #network {
+            width: 100vw;
+            height: 100vh;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="legend">
+        <div style="font-weight:bold;margin-bottom:8px;">Interaction Types</div>
+        <div class="legend-item"><div class="dot" style="background:#f59e0b;border-radius:0;"></div> Ligand (AQ4)</div>
+        <div class="legend-item"><div class="dot" style="background:#10b981;"></div> Hydrogen Bond</div>
+        <div class="legend-item"><div class="dot" style="background:#3b82f6;"></div> Hydrophobic Contact</div>
+    </div>
+    <div id="network"></div>
+    <script>
+        const nodes = new vis.DataSet([{"id": "ligand", "label": "AQ4", "color": "#f59e0b", "size": 30, "shape": "diamond"}, {"id": "res_0", "label": "LEU764", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_1", "label": "LEU820", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_2", "label": "VAL702", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_3", "label": "ALA719", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_4", "label": "LEU694", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_5", "label": "LEU694", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_6", "label": "PRO770", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_7", "label": "GLY772", "color": "#10b981", "size": 15, "shape": "dot"}, {"id": "res_8", "label": "PRO770", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_9", "label": "PHE771", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_10", "label": "LEU768", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_11", "label": "MET769", "color": "#3b82f6", "size": 15, "shape": "dot"}, {"id": "res_12", "label": "MET769", "color": "#10b981", "size": 15, "shape": "dot"}]);
+        const edges = new vis.DataSet([{"from": "ligand", "to": "res_0", "label": "Hydrophobic (4.36\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_1", "label": "Hydrophobic (4.11\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_2", "label": "Hydrophobic (4.39\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_3", "label": "Hydrophobic (4.17\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_4", "label": "Hydrophobic (4.3\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_5", "label": "H-Bond (3.27\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_6", "label": "H-Bond (3.21\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_7", "label": "H-Bond (3.24\u00c5)", "color": "#10b981", "width": 2, "dashes": true}, {"from": "ligand", "to": "res_8", "label": "Hydrophobic (4.25\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_9", "label": "Hydrophobic (4.39\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_10", "label": "Hydrophobic (3.99\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_11", "label": "Hydrophobic (3.85\u00c5)", "color": "#3b82f6", "width": 1, "dashes": false}, {"from": "ligand", "to": "res_12", "label": "H-Bond (2.7\u00c5)", "color": "#10b981", "width": 2, "dashes": true}]);
+        const container = document.getElementById('network');
+        const data = { nodes: nodes, edges: edges };
+        const options = {
+            nodes: {
+                font: { color: '#ffffff', size: 12 }
+            },
+            edges: {
+                font: { color: '#9ca3af', size: 10, align: 'middle' },
+                color: { color: '#4b5563' }
+            },
+            physics: {
+                stabilization: true,
+                barnesHut: {
+                    gravitationalConstant: -2000,
+                    centralGravity: 0.3,
+                    springLength: 95
+                }
+            }
+        };
+        const network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
