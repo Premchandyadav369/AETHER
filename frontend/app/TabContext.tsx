@@ -2,7 +2,19 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-export type Tab = 'home' | 'copilot' | 'workspace' | 'proteins' | 'molecules' | 'pipeline' | 'knowledge' | 'dashboard' | 'developer';
+export type Tab = 
+  | 'home' 
+  | 'copilot' 
+  | 'workspace' 
+  | 'proteins' 
+  | 'molecules' 
+  | 'pipeline' 
+  | 'knowledge' 
+  | 'dashboard' 
+  | 'developer'
+  | 'engine'
+  | 'digitaltwin'
+  | 'explain';
 
 interface TabContextType {
   activeTab: Tab;

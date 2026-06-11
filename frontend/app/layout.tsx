@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Home, Activity, Database, Compass, RefreshCw, Zap, Cpu, 
-  HelpCircle, Settings, User, Moon, Sun, Bell, Github, Code
+  HelpCircle, Settings, User, Moon, Sun, Bell, Github, Code, Brain,
+  Network
 } from 'lucide-react';
 import { TabProvider, useTab, Tab } from './TabContext';
 import './globals.css';
@@ -68,7 +69,6 @@ function RootLayoutInner({
       setTrailPos(prev => {
         const dx = cursorPos.x - prev.x;
         const dy = cursorPos.y - prev.y;
-        // Adjust the division factor to change trail stiffness/lag
         return {
           x: prev.x + dx / 5,
           y: prev.y + dy / 5
@@ -90,7 +90,6 @@ function RootLayoutInner({
     let color = 'border-cyber-accent';
     let dotColor = 'bg-cyber-glow';
     let size = 'w-10 h-10';
-    let extraEffect = '';
 
     switch (activeTab) {
       case 'proteins':
@@ -126,7 +125,17 @@ function RootLayoutInner({
       case 'knowledge':
         color = 'border-purple-500';
         dotColor = 'bg-purple-400';
-        size = 'w-13 h-13 border-spacing-2';
+        size = 'w-12 h-12';
+        break;
+      case 'digitaltwin':
+        color = 'border-cyan-400 animate-pulse';
+        dotColor = 'bg-cyan-300';
+        size = 'w-13 h-13';
+        break;
+      case 'engine':
+        color = 'border-yellow-400 border-dotted animate-[spin_8s_linear_infinite]';
+        dotColor = 'bg-yellow-300';
+        size = 'w-11 h-11';
         break;
     }
 
@@ -144,14 +153,14 @@ function RootLayoutInner({
     <html lang="en" className={theme}>
       <body className="bg-[#070a13] text-[#f3f4f6] min-h-screen flex flex-col relative select-none">
         
-        {/* Custom cursor dot */}
+        {/* Custom cursor dot - explicitly pointer-events-none */}
         <div 
-          className={`cursor-dot hidden md:block transition-transform duration-100 ${cursorInfo.dotColor}`} 
+          className={`cursor-dot pointer-events-none hidden md:block transition-transform duration-100 ${cursorInfo.dotColor}`} 
           style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }} 
         />
-        {/* Custom cursor outline with lag trail */}
+        {/* Custom cursor outline with lag trail - explicitly pointer-events-none */}
         <div 
-          className={`cursor-outline hidden md:block transition-all duration-75 flex items-center justify-center ${cursorInfo.color} ${cursorInfo.size}`} 
+          className={`cursor-outline pointer-events-none hidden md:block transition-all duration-75 flex items-center justify-center ${cursorInfo.color} ${cursorInfo.size}`} 
           style={{ left: `${trailPos.x}px`, top: `${trailPos.y}px` }} 
         />
 
@@ -175,14 +184,26 @@ function RootLayoutInner({
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm text-[#9ca3af]">
-            {(['home', 'workspace', 'proteins', 'molecules', 'pipeline', 'copilot', 'dashboard', 'knowledge'] as const).map((tab) => (
+          <nav className="hidden lg:flex items-center gap-6 text-xs text-[#9ca3af]">
+            {(['home', 'workspace', 'engine', 'digitaltwin', 'proteins', 'molecules', 'pipeline', 'copilot', 'dashboard', 'knowledge', 'explain'] as const).map((tab) => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`hover:text-white transition-all duration-200 relative py-1 capitalize ${activeTab === tab ? 'text-white font-semibold' : ''}`}
+                className={`hover:text-white transition-all duration-200 relative py-1 capitalize whitespace-nowrap ${activeTab === tab ? 'text-white font-semibold' : ''}`}
               >
-                {tab === 'copilot' ? 'AI Copilot' : tab === 'workspace' ? 'Studio' : tab === 'pipeline' ? 'Discovery Pipeline' : tab === 'knowledge' ? 'Knowledge Graph' : tab}
+                {tab === 'copilot' 
+                  ? 'AI Copilot' 
+                  : tab === 'workspace' 
+                    ? 'Studio' 
+                    : tab === 'pipeline' 
+                      ? 'Pipeline' 
+                      : tab === 'knowledge' 
+                        ? 'Galaxy' 
+                        : tab === 'digitaltwin' 
+                          ? 'Digital Twin' 
+                          : tab === 'explain' 
+                            ? 'XAI'
+                            : tab}
                 {activeTab === tab && (
                   <div className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500 shadow-neon" />
                 )}
@@ -227,15 +248,18 @@ function RootLayoutInner({
         <div className="flex flex-1 relative z-10">
           
           {/* Sidebar */}
-          <aside className="glass-panel border-r border-[#1a233d] w-16 md:w-20 flex flex-col items-center py-6 gap-6 sticky top-16 h-[calc(100vh-64px)] z-30">
+          <aside className="glass-panel border-r border-[#1a233d] w-16 md:w-20 flex flex-col items-center py-6 gap-5 sticky top-16 h-[calc(100vh-64px)] z-30 overflow-y-auto">
             <SidebarButton icon={<Home size={20} />} label="Home" active={activeTab === 'home'} onClick={() => setActiveTab('home')} />
             <SidebarButton icon={<Activity size={20} />} label="Workspace" active={activeTab === 'workspace'} onClick={() => setActiveTab('workspace')} />
+            <SidebarButton icon={<Zap size={20} />} label="Discovery Engine" active={activeTab === 'engine'} onClick={() => setActiveTab('engine')} />
+            <SidebarButton icon={<User size={20} />} label="Digital Twin" active={activeTab === 'digitaltwin'} onClick={() => setActiveTab('digitaltwin')} />
             <SidebarButton icon={<Database size={20} />} label="Proteins" active={activeTab === 'proteins'} onClick={() => setActiveTab('proteins')} />
             <SidebarButton icon={<Compass size={20} />} label="Molecules" active={activeTab === 'molecules'} onClick={() => setActiveTab('molecules')} />
             <SidebarButton icon={<RefreshCw size={20} />} label="Pipeline" active={activeTab === 'pipeline'} onClick={() => setActiveTab('pipeline')} />
-            <SidebarButton icon={<Zap size={20} />} label="AI Copilot" active={activeTab === 'copilot'} onClick={() => setActiveTab('copilot')} />
+            <SidebarButton icon={<Brain size={20} />} label="AI Copilot" active={activeTab === 'copilot'} onClick={() => setActiveTab('copilot')} />
             <SidebarButton icon={<Cpu size={20} />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-            <SidebarButton icon={<HelpCircle size={20} />} label="Knowledge Graph" active={activeTab === 'knowledge'} onClick={() => setActiveTab('knowledge')} />
+            <SidebarButton icon={<Network size={20} />} label="Galaxy Graph" active={activeTab === 'knowledge'} onClick={() => setActiveTab('knowledge')} />
+            <SidebarButton icon={<HelpCircle size={20} />} label="Explainable AI" active={activeTab === 'explain'} onClick={() => setActiveTab('explain')} />
             
             <div className="mt-auto flex flex-col gap-4">
               <SidebarButton icon={<Code size={20} />} label="API / GitHub" active={activeTab === 'developer'} onClick={() => setActiveTab('developer')} />
