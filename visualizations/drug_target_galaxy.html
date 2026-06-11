@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Drug Target Galaxy Network</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        #network {
+            width: 100vw;
+            height: 100vh;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="legend">
+        <h3 style="margin:0 0 5px 0;">Galaxy Legend</h3>
+        <div><span style="color:#ef4444;">■</span> Kinase Targets</div>
+        <div><span style="color:#f59e0b;">■</span> FDA Approved Drugs</div>
+    </div>
+    <div id="network"></div>
+    <script>
+        const nodes = new vis.DataSet([{"id": "egfr", "label": "EGFR", "color": "#ef4444", "size": 35, "shape": "hexagon"}, {"id": "braf", "label": "BRAF", "color": "#ec4899", "size": 35, "shape": "hexagon"}, {"id": "cdk2", "label": "CDK2", "color": "#3b82f6", "size": 35, "shape": "hexagon"}, {"id": "hiv", "label": "HIV Protease", "color": "#10b981", "size": 35, "shape": "hexagon"}, {"id": "ache", "label": "AChE", "color": "#8b5cf6", "size": 35, "shape": "hexagon"}, {"id": "erlotinib", "label": "Erlotinib", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "gefitinib", "label": "Gefitinib", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "vemurafenib", "label": "Vemurafenib", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "dabrafenib", "label": "Dabrafenib", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "dinaciclib", "label": "Dinaciclib", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "saquinavir", "label": "Saquinavir", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "ritonavir", "label": "Ritonavir", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "donepezil", "label": "Donepezil", "color": "#f59e0b", "size": 20, "shape": "dot"}, {"id": "galantamine", "label": "Galantamine", "color": "#f59e0b", "size": 20, "shape": "dot"}]);
+        const edges = new vis.DataSet([{"from": "erlotinib", "to": "egfr", "label": "pKd 8.76", "color": "#4b5563"}, {"from": "gefitinib", "to": "egfr", "label": "pKd 8.42", "color": "#4b5563"}, {"from": "vemurafenib", "to": "braf", "label": "pKd 9.12", "color": "#4b5563"}, {"from": "dabrafenib", "to": "braf", "label": "pKd 8.95", "color": "#4b5563"}, {"from": "dinaciclib", "to": "cdk2", "label": "pKd 8.56", "color": "#4b5563"}, {"from": "saquinavir", "to": "hiv", "label": "pKd 9.45", "color": "#4b5563"}, {"from": "ritonavir", "to": "hiv", "label": "pKd 8.88", "color": "#4b5563"}, {"from": "donepezil", "to": "ache", "label": "pKd 9.02", "color": "#4b5563"}, {"from": "galantamine", "to": "ache", "label": "pKd 7.85", "color": "#4b5563"}]);
+        const container = document.getElementById('network');
+        const data = { nodes: nodes, edges: edges };
+        const options = {
+            nodes: { font: { color: '#ffffff' } },
+            edges: { font: { color: '#9ca3af', size: 10 } },
+            physics: { solver: 'forceAtlas2Based' }
+        };
+        new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
