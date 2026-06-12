@@ -14,9 +14,9 @@ logger = logging.getLogger("aether-rami-backend")
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="AETHER-RAMI V6 API Platform",
-        description="Production-grade backend service for Protein-Aware Drug Discovery Foundation Model",
-        version="6.0.0",
+        title="AETHER-RAMI V7 API Platform",
+        description="AI-powered drug discovery and precision medicine operating system",
+        version="7.0.0",
         docs_url="/docs",
         redoc_url="/redoc"
     )
@@ -37,20 +37,29 @@ def create_app() -> FastAPI:
     async def root():
         return {
             "status": "online",
-            "model": "AETHER-RAMI V6",
+            "model": "AETHER-RAMI V7",
             "capabilities": [
-                "Drug Discovery Studio",
-                "Protein Intelligence",
-                "Binding Affinity Prediction",
-                "Molecular Generation",
-                "RAMI Retrieval Engine",
-                "Explainable AI (SHAP/Attention)"
+                "Precision Medicine Engine",
+                "Multi-Omics Foundation Model",
+                "Protein Dynamics & MD Workflow",
+                "AI Medicinal Chemist",
+                "Drug Repurposing Engine",
+                "Disease Knowledge Graph",
+                "Autonomous Research Agent",
+                "Manufacturing Readiness",
+                "Clinical Trial Risk Engine",
+                "Digital Human Twin",
+                "Explainable AI Center",
+                "Global Drug Intelligence",
+                "Molecular Generator",
+                "Benchmarking Arena",
+                "Regulatory Readiness Suite"
             ]
         }
         
     @app.on_event("startup")
     async def startup_event():
-        logger.info("Initializing AETHER-RAMI V6 models and FAISS search indexes...")
+        logger.info("Initializing AETHER-RAMI V7 research engine and retrieval indexes...")
         # Models are loaded inside inference services on-demand or at startup
         
     return app

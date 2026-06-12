@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Allow iframes to load local HTML files from public directory
+  async rewrites() {
+    return [
+      {
+        source: '/backend/:path*',
+        destination: 'http://127.0.0.1:8000/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {
@@ -10,8 +17,8 @@ const nextConfig = {
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         ],
       },
-    ]
+    ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

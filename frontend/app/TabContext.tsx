@@ -14,7 +14,11 @@ export type Tab =
   | 'developer'
   | 'engine'
   | 'digitaltwin'
-  | 'explain';
+  | 'explain'
+  | 'druglab'
+  | 'pathogens'
+  | 'cancer'
+  | 'features';
 
 interface TabContextType {
   activeTab: Tab;

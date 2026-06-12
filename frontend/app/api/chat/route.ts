@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
     
     const K2_API_URL = 'https://api.k2think.ai/v1/chat/completions';
-    const K2_API_KEY = 'IFM-4SpQ0qEg0Wlsw04O';
+    const K2_API_KEY = process.env.K2_API_KEY;
     const K2_MODEL = 'MBZUAI-IFM/K2-Think-v2';
 
     const systemMessage = {
@@ -20,6 +20,10 @@ Include structural features, SMILES representations, and clinical pathways where
     const apiMessages = [systemMessage, ...messages];
 
     try {
+      if (!K2_API_KEY) {
+        throw new Error('K2_API_KEY is not configured');
+      }
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 second timeout
 

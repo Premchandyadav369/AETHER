@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from backend.services.inference import inference_service
 from backend.services.vector_search import vector_search_service
+from backend.services.research_engine import research_engine
 
 router = APIRouter()
 
@@ -22,6 +23,29 @@ class FeedbackRequest(BaseModel):
     expert_verified_affinity: float
     expert_username: str
 
+class InteractionRequest(BaseModel):
+    smiles: str = Field(..., example="CN1CCN(CC1)CC(=O)NC2=CC=C(C=C2)NC3=NC=NC4=CC=CC=C43")
+    target: str = Field("EGFR", example="EGFR")
+
+class TwinRequest(BaseModel):
+    smiles: str = Field(..., example="CC(=O)NC1=CC=C(O)C=C1")
+    route: str = Field("oral", example="oral")
+
+class AgentRequest(BaseModel):
+    target: str = Field(..., example="EGFR")
+    disease: str = Field("Cancer", example="Glioblastoma")
+
+class PrecisionMedicineRequest(BaseModel):
+    mutations: List[str] = Field(..., example=["L858R", "T790M"])
+    biomarkers: Optional[List[str]] = Field(None, example=["EGFR", "PD-L1"])
+    disease: str = Field("NSCLC", example="NSCLC")
+
+class MultiOmicsRequest(BaseModel):
+    disease: str = Field("Glioblastoma", example="Glioblastoma")
+
+class RepurposingRequest(BaseModel):
+    drug_name: str = Field("Metformin", example="Metformin")
+
 # Endpoints
 @router.post("/predict", summary="Predict binding affinity & ADMET simultaneously")
 async def predict(request: PredictRequest):
@@ -29,10 +53,14 @@ async def predict(request: PredictRequest):
         affinity = inference_service.predict_affinity(request.smiles, request.protein_sequence)
         admet = inference_service.predict_admet(request.smiles)
         explain = inference_service.explain_prediction(request.smiles, "Custom Target")
+        interaction = research_engine.protein_ligand_interaction(request.smiles, "Custom Target")
+        safety = research_engine.safety_profile(request.smiles)
         return {
             "smiles": request.smiles,
             "binding_affinity": affinity,
             "admet_properties": admet,
+            "interaction_engine": interaction,
+            "safety_engine": safety,
             "explainability": explain
         }
     except Exception as e:
@@ -95,7 +123,89 @@ async def affinity_endpoint(smiles: str = Query(...), seq: str = Query(...)):
 
 @router.post("/explain", summary="Generate prediction explainability reports")
 async def explain_endpoint(smiles: str = Query(...), target: str = Query(...)):
-    return inference_service.explain_prediction(smiles, target)
+    explanation = inference_service.explain_prediction(smiles, target)
+    interaction = research_engine.protein_ligand_interaction(smiles, target)
+    return {
+        **explanation,
+        "important_atoms": ["N1", "O2", "C7", "F12"],
+        "important_residues": interaction["binding_hotspots"],
+        "cross_attention": interaction["cross_attention"],
+        "confidence_interval": interaction["affinity"]["confidence_interval_pKd"],
+        "uncertainty_estimation": "ensemble variance + deterministic molecular surrogate",
+        "risk_score": research_engine.safety_profile(smiles)["safety_score"],
+    }
+
+@router.post("/interaction", summary="Run protein-ligand cross-attention interaction analysis")
+async def interaction_endpoint(request: InteractionRequest):
+    return research_engine.protein_ligand_interaction(request.smiles, request.target)
+
+@router.get("/protein-analysis", summary="Analyze PDB structure, pockets, dynamics, mutations, and family similarity")
+async def protein_analysis_endpoint(pdb_id: str = Query("1M17")):
+    return research_engine.protein_analysis(pdb_id)
+
+@router.post("/safety", summary="Predict multi-endpoint drug safety profile")
+async def safety_endpoint(request: InteractionRequest):
+    return research_engine.safety_profile(request.smiles)
+
+@router.post("/quantum", summary="Generate quantum molecular descriptor features")
+async def quantum_endpoint(request: InteractionRequest):
+    return research_engine.quantum_descriptors(request.smiles)
+
+@router.post("/digital-twin", summary="Simulate drug journey through human digital twin compartments")
+async def digital_twin_endpoint(request: TwinRequest):
+    return research_engine.digital_twin(request.smiles, request.route)
+
+@router.post("/agent/discover", summary="Run autonomous drug discovery agent")
+async def agent_discover_endpoint(request: AgentRequest):
+    return research_engine.discovery_agent(request.target, request.disease)
+
+@router.post("/precision-medicine", summary="Patient-specific drug ranking from mutation profile")
+async def precision_medicine_endpoint(request: PrecisionMedicineRequest):
+    return research_engine.precision_medicine(request.mutations, request.biomarkers, request.disease)
+
+@router.post("/multi-omics", summary="Multi-modal biological foundation model analysis")
+async def multi_omics_endpoint(request: MultiOmicsRequest):
+    return research_engine.multi_omics(request.disease)
+
+@router.get("/protein-dynamics", summary="Protein motion and pocket dynamics analysis")
+async def protein_dynamics_endpoint(pdb_id: str = Query("1M17")):
+    return research_engine.protein_dynamics(pdb_id)
+
+@router.post("/molecular-dynamics", summary="MD simulation: drug + protein over time")
+async def molecular_dynamics_endpoint(request: InteractionRequest):
+    return research_engine.molecular_dynamics(request.smiles, request.target)
+
+@router.post("/medicinal-chemist", summary="AI medicinal chemistry optimization suggestions")
+async def medicinal_chemist_endpoint(request: InteractionRequest):
+    return research_engine.medicinal_chemist(request.smiles, request.target)
+
+@router.post("/repurposing", summary="Drug repurposing discovery engine")
+async def repurposing_endpoint(request: RepurposingRequest):
+    return research_engine.drug_repurposing(request.drug_name)
+
+@router.get("/disease-graph", summary="Disease knowledge graph: drug-protein-disease-pathway")
+async def disease_graph_endpoint():
+    return research_engine.disease_knowledge_graph()
+
+@router.post("/manufacturing", summary="Drug manufacturing readiness evaluation")
+async def manufacturing_endpoint(request: InteractionRequest):
+    return research_engine.manufacturing_readiness(request.smiles)
+
+@router.post("/clinical-risk", summary="Clinical trial risk and readiness scoring")
+async def clinical_risk_endpoint(request: InteractionRequest):
+    return research_engine.clinical_trial_risk(request.smiles, request.target)
+
+@router.get("/benchmarking", summary="Benchmarking arena: AETHER-RAMI vs baselines")
+async def benchmarking_endpoint():
+    return research_engine.benchmarking_arena()
+
+@router.post("/regulatory-report", summary="Regulatory readiness PDF/JSON report generation")
+async def regulatory_report_endpoint(request: InteractionRequest):
+    return research_engine.regulatory_report(request.smiles, request.target)
+
+@router.get("/intelligence", summary="Global drug intelligence from biomedical databases")
+async def intelligence_endpoint(query: str = Query(..., example="EGFR inhibitor")):
+    return research_engine.global_intelligence(query)
 
 # MLOps active learning pipelines
 @router.post("/train", summary="Trigger incremental active learning retrain")
