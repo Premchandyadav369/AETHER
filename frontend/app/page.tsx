@@ -14,6 +14,7 @@ import {
   PageHeader, MetricCard, PipelineStep, StatsCard, TimelineItem,
   GalleryCard, ShapBar, LoadingState, ApiError
 } from './components/shared';
+import ProteinViewer from './components/viewer/ProteinViewer';
 import DrugLabView from './components/views/DrugLabView';
 import PathogenView from './components/views/PathogenView';
 import CancerTargetingView from './components/views/CancerTargetingView';
@@ -610,41 +611,58 @@ function EngineView() {
             {loading ? 'Running Inference...' : 'Execute Binding Inference'}
           </button>
         </div>
-        <div className="lg:col-span-8 glass-panel rounded-2xl p-5 min-h-[360px]">
-          {loading && <LoadingState message="Calling /v1/predict..." />}
-          {error && <ApiError message={error} onRetry={run} />}
-          {!loading && !error && !results && (
-            <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
-              <FlaskConical size={36} className="text-aether-border" />
-              <span className="text-xs text-aether-muted">Enter SMILES and execute inference</span>
+        <div className="lg:col-span-8 flex flex-col gap-5">
+          <div className="glass-panel rounded-2xl p-2 h-[400px] relative group">
+            <div className="absolute top-4 left-4 z-20 flex gap-2">
+              <span className="badge-api px-3 py-1 rounded-md text-[9px] font-bold uppercase backdrop-blur-md bg-black/40 border border-aether-border">AlphaFold WebGL Engine</span>
+              <span className="badge-quantum px-3 py-1 rounded-md text-[9px] font-bold uppercase backdrop-blur-md bg-black/40 border border-aether-border">Target: {target}</span>
             </div>
-          )}
-          {results && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="col-span-3 grid grid-cols-2 md:grid-cols-4 gap-3">
-                <MetricCard label="pKd" value={results.interaction_engine?.affinity?.pKd ?? results.binding_affinity?.pKd ?? '—'} />
-                <MetricCard label="Kd (nM)" value={results.interaction_engine?.affinity?.Kd_nM ?? '—'} />
-                <MetricCard label="Safety Score" value={results.safety_engine?.safety_score ?? '—'} unit="/100" color="text-aether-secondary" />
-                <MetricCard label="QED" value={results.admet_properties?.qed?.toFixed?.(2) ?? '—'} color="text-aether-accent" />
-              </div>
-              <div className="glass-panel rounded-xl p-4">
-                <h4 className="font-display font-bold text-xs text-aether-primary mb-2">ADMET</h4>
-                {results.admet_properties && Object.entries(results.admet_properties).slice(0, 5).map(([k, v]) => (
-                  <div key={k} className="flex justify-between text-[11px] mb-1"><span className="text-aether-muted capitalize">{k.replace(/_/g, ' ')}</span><span className="font-scientific text-white">{String(v)}</span></div>
-                ))}
-              </div>
-              <div className="glass-panel rounded-xl p-4">
-                <h4 className="font-display font-bold text-xs text-aether-danger mb-2">Safety Endpoints</h4>
-                {results.safety_engine?.endpoints && Object.entries(results.safety_engine.endpoints).slice(0, 5).map(([k, v]) => (
-                  <div key={k} className="flex justify-between text-[11px] mb-1"><span className="text-aether-muted capitalize">{k.replace(/_/g, ' ')}</span><span className="font-scientific text-white">{formatRisk(v as number)}</span></div>
-                ))}
-              </div>
-              <div className="glass-panel rounded-xl p-4">
-                <h4 className="font-display font-bold text-xs text-aether-secondary mb-2">Why Active?</h4>
-                {results.interaction_engine?.why_active?.map((w: string, i: number) => <p key={i} className="text-[10px] text-aether-muted mb-1">• {w}</p>)}
-              </div>
+            <ProteinViewer 
+              pdbId={target === 'EGFR' ? '1M17' : target === 'BRAF' ? '4MBJ' : target === 'CDK2' ? '1AQ1' : target === 'HIV Protease' ? '1HSG' : '1EVE'} 
+              style="cartoon" 
+              colorBy="ss" 
+            />
+            <div className="absolute bottom-4 right-4 z-20 text-[8px] text-aether-muted uppercase font-bold tracking-widest bg-black/40 px-2 py-1 rounded pointer-events-none">
+              Interactive 3D · Drag to Rotate · Scroll to Zoom
             </div>
-          )}
+          </div>
+          
+          <div className="glass-panel rounded-2xl p-5 min-h-[220px]">
+            {loading && <LoadingState message="Calling /v1/predict..." />}
+            {error && <ApiError message={error} onRetry={run} />}
+            {!loading && !error && !results && (
+              <div className="flex flex-col items-center justify-center h-full gap-3 py-8">
+                <FlaskConical size={32} className="text-aether-border" />
+                <span className="text-xs text-aether-muted">Enter SMILES and execute inference to view binding analytics</span>
+              </div>
+            )}
+            {results && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="col-span-3 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <MetricCard label="pKd Affinity" value={results.interaction_engine?.affinity?.pKd ?? results.binding_affinity?.pKd ?? '—'} />
+                  <MetricCard label="Kd (nM)" value={results.interaction_engine?.affinity?.Kd_nM ?? '—'} />
+                  <MetricCard label="Safety Score" value={results.safety_engine?.safety_score ?? '—'} unit="/100" color="text-aether-secondary" />
+                  <MetricCard label="QED" value={results.admet_properties?.qed?.toFixed?.(2) ?? '—'} color="text-aether-accent" />
+                </div>
+                <div className="glass-panel rounded-xl p-4">
+                  <h4 className="font-display font-bold text-xs text-aether-primary mb-2">ADMET Properties</h4>
+                  {results.admet_properties && Object.entries(results.admet_properties).slice(0, 5).map(([k, v]) => (
+                    <div key={k} className="flex justify-between text-[11px] mb-1.5"><span className="text-aether-muted capitalize">{k.replace(/_/g, ' ')}</span><span className="font-scientific text-white">{String(v)}</span></div>
+                  ))}
+                </div>
+                <div className="glass-panel rounded-xl p-4">
+                  <h4 className="font-display font-bold text-xs text-aether-danger mb-2">Tox Endpoints</h4>
+                  {results.safety_engine?.endpoints && Object.entries(results.safety_engine.endpoints).slice(0, 5).map(([k, v]) => (
+                    <div key={k} className="flex justify-between text-[11px] mb-1.5"><span className="text-aether-muted capitalize">{k.replace(/_/g, ' ')}</span><span className="font-scientific text-white">{formatRisk(v as number)}</span></div>
+                  ))}
+                </div>
+                <div className="glass-panel rounded-xl p-4">
+                  <h4 className="font-display font-bold text-xs text-aether-secondary mb-2">Binding Drivers</h4>
+                  {results.interaction_engine?.why_active?.map((w: string, i: number) => <p key={i} className="text-[10px] text-aether-muted mb-1.5">• {w}</p>)}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
