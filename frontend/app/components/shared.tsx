@@ -24,11 +24,15 @@ export function MetricCard({ label, value, unit, color = 'text-aether-primary' }
   label: string; value: string | number; unit?: string; color?: string;
 }) {
   return (
-    <div className="glass-panel-interactive magnetic-target rounded-xl p-4 flex flex-col gap-1">
-      <span className="text-[9px] text-aether-muted uppercase tracking-wider font-bold">{label}</span>
-      <span className={`font-scientific font-bold text-lg ${color}`}>
-        {value}{unit && <span className="text-xs text-aether-muted ml-1">{unit}</span>}
-      </span>
+    <div className="glass-panel-interactive rounded-2xl p-5 flex flex-col gap-1.5 relative overflow-hidden group border border-aether-border/60 hover:border-aether-primary/40 transition-all duration-300">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <span className="text-[10px] text-aether-muted uppercase tracking-widest font-bold z-10">{label}</span>
+      <div className="flex items-baseline gap-1.5 z-10">
+        <span className={`font-scientific font-black text-2xl ${color} drop-shadow-[0_0_8px_currentColor] group-hover:scale-[1.02] transition-transform`}>
+          {value}
+        </span>
+        {unit && <span className="text-xs text-aether-muted/70 font-bold">{unit}</span>}
+      </div>
     </div>
   );
 }
@@ -47,9 +51,10 @@ export function PipelineStep({ num, title, desc, color, active }: {
 
 export function StatsCard({ count, label }: { count: string; label: string }) {
   return (
-    <div className="glass-panel-interactive magnetic-target rounded-xl p-5 flex flex-col gap-1 text-center">
-      <span className="font-scientific font-black text-xl text-aether-primary">{count}</span>
-      <span className="text-[10px] text-aether-muted uppercase tracking-wider font-bold">{label}</span>
+    <div className="glass-panel-interactive rounded-2xl p-6 flex flex-col gap-2 text-center group overflow-hidden relative border border-aether-border/60 hover:border-aether-primary/30 transition-all duration-300">
+      <div className="absolute inset-0 bg-gradient-to-t from-aether-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <span className="font-scientific font-black text-3xl text-aether-primary drop-shadow-[0_0_12px_rgba(0,229,255,0.4)] transition-transform group-hover:scale-105 z-10">{count}</span>
+      <span className="text-[10px] text-aether-muted uppercase tracking-widest font-bold z-10">{label}</span>
     </div>
   );
 }

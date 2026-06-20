@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles, Compass, Download, Brain, Dna, Network, Database, FlaskConical,
   Target, Award, Send, RefreshCw, Cpu, HelpCircle, BookOpen, FileText,
@@ -427,42 +428,117 @@ function CopilotView() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] max-w-4xl mx-auto glass-panel rounded-2xl overflow-hidden">
-      <div className="p-4 border-b border-aether-border flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg bg-aether-accent/15 border border-aether-accent/30 flex items-center justify-center text-aether-accent"><Brain size={18} /></div>
-        <div>
-          <h2 className="font-display font-bold text-sm text-white">K2 Think V2 Scientific Copilot</h2>
-          <p className="text-[9px] text-aether-muted">Cites AETHER-RAMI outputs · Explainable reasoning</p>
+    <div className="flex flex-col h-[calc(100vh-120px)] max-w-[1000px] mx-auto glass-panel rounded-3xl overflow-hidden shadow-2xl relative border border-aether-border/60">
+      
+      {/* Premium Header */}
+      <div className="p-5 border-b border-aether-border/60 bg-aether-bg2/40 backdrop-blur-md flex items-center gap-4 z-10">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-aether-primary/20 to-aether-accent/20 border border-aether-accent/30 flex items-center justify-center text-aether-accent shadow-neon relative">
+          <Brain size={20} />
+          <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full animate-ping" />
+          <div className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full" />
         </div>
-        <span className="ml-auto badge-quantum text-[9px] px-2 py-0.5 rounded font-bold">K2-Think-v2</span>
+        <div>
+          <h2 className="font-display font-bold text-base text-white tracking-wide">K2 Think V2 Scientific Copilot</h2>
+          <p className="text-[10px] text-aether-muted uppercase tracking-widest font-bold mt-0.5">Secure AI Reasoning Engine</p>
+        </div>
+        <span className="ml-auto flex items-center gap-2 bg-aether-bg border border-aether-border px-3 py-1.5 rounded-full text-[9px] font-bold text-aether-muted">
+          <Database size={10} className="text-aether-secondary" /> CONNECTED TO AETHER-RAMI CORE
+        </span>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-5">
-        {messages.map((msg, i) => {
-          const { thought, content } = parse(msg.content);
-          const isUser = msg.role === 'user';
-          return (
-            <div key={i} className={`flex gap-3 ${isUser ? 'justify-end' : ''}`}>
-              {!isUser && <div className="w-7 h-7 rounded-full bg-gradient-to-br from-aether-accent to-aether-primary flex items-center justify-center text-[8px] font-black text-aether-bg flex-shrink-0">K2</div>}
-              <div className="flex flex-col gap-2 max-w-[82%]">
-                {thought && (
-                  <details className="glass-panel border-aether-accent/20 bg-aether-accent/5 rounded-lg p-3 cursor-pointer">
-                    <summary className="text-[9px] font-bold text-aether-accent uppercase tracking-widest list-none flex items-center gap-1"><Terminal size={11} /> Reasoning chain</summary>
-                    <pre className="text-[10px] text-aether-muted font-scientific mt-2 whitespace-pre-wrap border-l border-aether-accent/20 pl-2">{thought}</pre>
-                  </details>
+
+      {/* Message Feed */}
+      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 scrollbar-thin relative">
+        <AnimatePresence>
+          {messages.map((msg, i) => {
+            const { thought, content } = parse(msg.content);
+            const isUser = msg.role === 'user';
+            
+            return (
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 15, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`flex gap-4 ${isUser ? 'justify-end' : 'justify-start'}`}
+              >
+                {!isUser && (
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-aether-accent to-aether-primary flex items-center justify-center text-[10px] font-black text-aether-bg flex-shrink-0 shadow-neon">
+                    K2
+                  </div>
                 )}
-                <div className={`p-3.5 rounded-xl text-xs leading-relaxed ${isUser ? 'bg-aether-primary/20 border border-aether-primary/30 text-white rounded-br-none' : 'glass-panel rounded-bl-none text-aether-text'}`}>{content}</div>
+                
+                <div className={`flex flex-col gap-2 max-w-[85%] ${isUser ? 'items-end' : 'items-start'}`}>
+                  {thought && (
+                    <motion.details 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="glass-panel border-aether-accent/20 bg-aether-accent/5 rounded-xl p-3 cursor-pointer overflow-hidden max-w-full"
+                    >
+                      <summary className="text-[10px] font-bold text-aether-accent uppercase tracking-widest list-none flex items-center gap-1.5 select-none hover:text-white transition-colors">
+                        <Terminal size={12} /> View internal reasoning chain
+                      </summary>
+                      <pre className="text-[11px] text-aether-muted font-scientific mt-3 whitespace-pre-wrap border-l-2 border-aether-accent/20 pl-3 py-1 bg-black/20 rounded-r-md">
+                        {thought}
+                      </pre>
+                    </motion.details>
+                  )}
+                  
+                  <div className={`p-4 text-sm leading-relaxed whitespace-pre-wrap ${
+                    isUser 
+                      ? 'bg-gradient-to-br from-aether-primary/20 to-aether-primary/10 border border-aether-primary/30 text-white rounded-2xl rounded-tr-sm shadow-[0_0_15px_rgba(77,163,255,0.1)]' 
+                      : 'bg-aether-bg2 border border-aether-border text-aether-text rounded-2xl rounded-tl-sm'
+                  }`}>
+                    {content}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+          
+          {loading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex gap-4 items-end"
+            >
+              <div className="w-8 h-8 rounded-full bg-aether-accent/20 flex items-center justify-center">
+                <RefreshCw size={12} className="animate-spin text-aether-accent" />
               </div>
-            </div>
-          );
-        })}
-        {loading && <div className="flex gap-3"><div className="w-7 h-7 rounded-full bg-aether-accent/30 animate-pulse" /><div className="glass-panel p-3 text-xs text-aether-muted flex items-center gap-2"><RefreshCw size={11} className="animate-spin" /> Reasoning...</div></div>}
+              <div className="bg-aether-bg2 border border-aether-border rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1">
+                <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-aether-accent rounded-full" />
+                <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-aether-accent rounded-full" />
+                <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-1.5 h-1.5 bg-aether-accent rounded-full" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div ref={scrollRef} />
       </div>
-      <form onSubmit={submit} className="p-3 border-t border-aether-border flex gap-2">
-        <input value={input} onChange={e => setInput(e.target.value)} placeholder="Explain EGFR binding · Compare Gefitinib vs Erlotinib · Suggest analogs..."
-          className="flex-1 bg-aether-bg border border-aether-border rounded-lg px-4 py-2.5 text-xs text-white placeholder-aether-muted focus:outline-none focus:border-aether-accent/50" disabled={loading} />
-        <button type="submit" disabled={loading} className="px-4 py-2.5 rounded-lg bg-aether-accent/80 text-white font-bold text-xs flex items-center gap-1.5"><Send size={12} /> Send</button>
-      </form>
+
+      {/* Input Area */}
+      <div className="p-4 bg-aether-bg2/80 backdrop-blur-md border-t border-aether-border/60">
+        <form onSubmit={submit} className="relative max-w-[90%] mx-auto">
+          <input 
+            value={input} 
+            onChange={e => setInput(e.target.value)} 
+            placeholder="Ask about targeted degradation, binding sites, or ADMET risks..."
+            className="w-full bg-aether-bg border-2 border-aether-border/80 rounded-2xl pl-5 pr-14 py-4 text-sm text-white placeholder-aether-muted/70 focus:outline-none focus:border-aether-primary/60 transition-all shadow-inner" 
+            disabled={loading} 
+          />
+          <button 
+            type="submit" 
+            disabled={loading || !input.trim()} 
+            className="absolute right-2 top-2 bottom-2 aspect-square rounded-xl bg-aether-primary text-aether-bg flex items-center justify-center hover:bg-aether-primary/90 transition-all disabled:opacity-50 disabled:hover:bg-aether-primary"
+          >
+            <Send size={16} className={input.trim() ? "translate-x-0.5" : ""} />
+          </button>
+        </form>
+        <div className="text-center mt-3">
+          <span className="text-[9px] text-aether-muted font-bold tracking-widest uppercase">
+            AETHER-RAMI can make mistakes. Verify critical clinical predictions.
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
