@@ -3,32 +3,42 @@ import json
 import numpy as np
 
 WORKSPACE = r"c:\Users\PREMCHANDYADAV\OneDrive\Desktop\Project\AETHERRAMI"
-V4_DIR = os.path.join(WORKSPACE, "aether-ramiv4")
+V9_DIR = os.path.join(WORKSPACE, "aether-ramiv9")
 
 class VectorSearchService:
     def __init__(self):
-        self.faiss_index = None
+        self.faiss_drug_index = None
+        self.faiss_protein_index = None
         self.embeddings = None
         self.load_index()
 
     def load_index(self):
-        faiss_path = os.path.join(V4_DIR, "faiss_v4.bin")
-        if os.path.exists(faiss_path):
+        faiss_drug_path = os.path.join(V9_DIR, "faiss_drug.bin")
+        if os.path.exists(faiss_drug_path):
             try:
                 import faiss
-                self.faiss_index = faiss.read_index(faiss_path)
-                print(f"Loaded FAISS search index: {faiss_path}")
+                self.faiss_drug_index = faiss.read_index(faiss_drug_path)
+                print(f"Loaded FAISS drug search index: {faiss_drug_path}")
             except Exception as e:
-                print(f"Error reading FAISS index (import faiss failed or invalid file): {e}")
+                print(f"Error reading FAISS drug index: {e}")
+
+        faiss_protein_path = os.path.join(V9_DIR, "faiss_protein.bin")
+        if os.path.exists(faiss_protein_path):
+            try:
+                import faiss
+                self.faiss_protein_index = faiss.read_index(faiss_protein_path)
+                print(f"Loaded FAISS protein search index: {faiss_protein_path}")
+            except Exception as e:
+                print(f"Error reading FAISS protein index: {e}")
                 
         # Load foundation embeddings matrix if available
-        npy_path = os.path.join(V4_DIR, "foundation_embeddings_v4.npy")
+        npy_path = os.path.join(V9_DIR, "foundation_embeddings.npy")
         if os.path.exists(npy_path):
             try:
                 self.embeddings = np.load(npy_path)
                 print(f"Loaded embedding matrix: {npy_path} of shape {self.embeddings.shape}")
             except Exception as e:
-                print(f"Error loading foundation_embeddings_v4.npy: {e}")
+                print(f"Error loading foundation_embeddings.npy: {e}")
 
     def search_similar_molecules(self, query_smiles: str, k: int = 5) -> list:
         """Finds top k similar molecules using embedding distance."""

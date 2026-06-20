@@ -23,13 +23,22 @@ export const aetherApi = {
     }),
 
   admet: (smiles: string) =>
-    apiFetch(`/admet?smiles=${encodeURIComponent(smiles)}`, { method: 'POST' }),
+    apiFetch('/admet', {
+      method: 'POST',
+      body: JSON.stringify({ smiles }),
+    }),
 
   affinity: (smiles: string, seq: string) =>
-    apiFetch(`/affinity?smiles=${encodeURIComponent(smiles)}&seq=${encodeURIComponent(seq)}`, { method: 'POST' }),
+    apiFetch('/affinity', {
+      method: 'POST',
+      body: JSON.stringify({ smiles, seq }),
+    }),
 
   explain: (smiles: string, target: string) =>
-    apiFetch(`/explain?smiles=${encodeURIComponent(smiles)}&target=${encodeURIComponent(target)}`, { method: 'POST' }),
+    apiFetch('/explain', {
+      method: 'POST',
+      body: JSON.stringify({ smiles, target }),
+    }),
 
   interaction: (smiles: string, target: string) =>
     apiFetch('/interaction', {

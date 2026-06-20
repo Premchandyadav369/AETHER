@@ -9,7 +9,8 @@ import {
 import { GeistSans } from 'geist/font/sans';
 import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
 import { TabProvider, useTab, Tab } from './TabContext';
-import ScientificCursor from './components/ScientificCursor';
+import SmoothScroll from './components/SmoothScroll';
+
 import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk' });
@@ -51,7 +52,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <ScientificCursor activeTab={activeTab} />
+      <SmoothScroll />
 
       {/* Ambient backgrounds */}
       <div className="fixed inset-0 pointer-events-none z-0">
