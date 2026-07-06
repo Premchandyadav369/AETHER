@@ -191,12 +191,6 @@ export default function DrugLabView() {
                 </div>
                 <MetricCard label="Target Engagement" value={results.twin.pkpd.target_engagement_pct} unit="%" />
                 <MetricCard label="Cmax" value={results.twin.pkpd.cmax_nM} unit="nM" />
-                <button
-                  onClick={() => setActiveTab('digitaltwin')}
-                  className="text-[10px] text-aether-primary font-bold hover:underline mt-1"
-                >
-                  Open Full Digital Twin →
-                </button>
               </div>
             </div>
           )}
