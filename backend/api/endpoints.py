@@ -132,14 +132,18 @@ async def affinity_endpoint(request: AffinityRequest):
 async def explain_endpoint(request: InteractionRequest):
     explanation = inference_service.explain_prediction(request.smiles, request.target)
     interaction = research_engine.protein_ligand_interaction(request.smiles, request.target)
+    safety = research_engine.safety_profile(request.smiles)
+    atoms = [b["atom"] for b in interaction.get("hydrogen_bonds", [])] + [b["atom"] for b in interaction.get("hydrophobic_contacts", [])]
     return {
         **explanation,
-        "important_atoms": ["N1", "O2", "C7", "F12"],
+        "important_atoms": atoms[:6] if atoms else explanation.get("top_features", [])[:6],
         "important_residues": interaction["binding_hotspots"],
-        "cross_attention": interaction["cross_attention"],
+        "cross_attention": interaction.get("cross_attention", []),
         "confidence_interval": interaction["affinity"]["confidence_interval_pKd"],
-        "uncertainty_estimation": "ensemble variance + deterministic molecular surrogate",
-        "risk_score": research_engine.safety_profile(request.smiles)["safety_score"],
+        "uncertainty_estimation": explanation.get("method", "RDKit Crippen + interaction surrogate"),
+        "risk_score": safety["safety_score"],
+        "compound_name": interaction.get("compound_name"),
+        "pubchem_formula": interaction.get("formula"),
     }
 
 @router.post("/interaction", summary="Run protein-ligand cross-attention interaction analysis")

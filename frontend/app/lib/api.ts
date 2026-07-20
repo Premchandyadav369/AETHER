@@ -89,7 +89,11 @@ export const aetherApi = {
 
   leaderboard: () => apiFetch('/leaderboard'),
 
-  health: () => apiFetch('/'),
+  health: async () => {
+    const res = await fetch('/backend/');
+    if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
+    return res.json();
+  },
 
   precisionMedicine: (mutations: string[], biomarkers?: string[], disease = 'NSCLC') =>
     apiFetch('/precision-medicine', {

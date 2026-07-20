@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import {
   Home, Activity, Database, Compass, RefreshCw, Zap, Cpu,
   HelpCircle, Github, Brain, Network, ShieldAlert, Heart,
-  FlaskConical, Code, Sun, Moon, Bell, Microscope, Layers
+  FlaskConical, Code, Sun, Moon, Bell, Microscope, Layers, Dna
 } from 'lucide-react';
 import { GeistSans } from 'geist/font/sans';
 import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
@@ -35,6 +35,7 @@ const NAV_TABS: { key: Tab; label: string }[] = [
   { key: 'engine', label: 'Engine' },
   { key: 'druglab', label: 'Drug Lab' },
   { key: 'digitaltwin', label: 'Twin' },
+  { key: 'research', label: 'Workbench' },
   { key: 'proteins', label: 'Proteins' },
   { key: 'molecules', label: 'Molecules' },
   { key: 'pathogens', label: 'Pathogens' },
@@ -125,6 +126,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           <SidebarBtn icon={<Zap size={18} />} label="Engine" active={activeTab === 'engine'} onClick={() => setActiveTab('engine')} />
           <SidebarBtn icon={<FlaskConical size={18} />} label="Drug Lab" active={activeTab === 'druglab'} onClick={() => setActiveTab('druglab')} />
           <SidebarBtn icon={<Activity size={18} />} label="Twin" active={activeTab === 'digitaltwin'} onClick={() => setActiveTab('digitaltwin')} />
+          <SidebarBtn icon={<Dna size={18} />} label="Workbench" active={activeTab === 'research'} onClick={() => setActiveTab('research')} />
           <SidebarBtn icon={<Database size={18} />} label="Proteins" active={activeTab === 'proteins'} onClick={() => setActiveTab('proteins')} />
           <SidebarBtn icon={<Compass size={18} />} label="Molecules" active={activeTab === 'molecules'} onClick={() => setActiveTab('molecules')} />
           <SidebarBtn icon={<ShieldAlert size={18} />} label="Pathogens" active={activeTab === 'pathogens'} onClick={() => setActiveTab('pathogens')} />

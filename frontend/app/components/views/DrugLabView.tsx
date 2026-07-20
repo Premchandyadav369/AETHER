@@ -16,7 +16,7 @@ const LAB_STEPS = [
 ];
 
 export default function DrugLabView() {
-  const { smilesInput, setSmilesInput, setActiveTab } = useTab();
+  const { smilesInput, setSmilesInput } = useTab();
   const [target, setTarget] = useState('EGFR');
   const [step, setStep] = useState(-1);
   const [running, setRunning] = useState(false);
@@ -30,21 +30,20 @@ export default function DrugLabView() {
     setStep(0);
 
     try {
-      for (let i = 0; i < LAB_STEPS.length - 1; i++) {
-        setStep(i);
-        await new Promise(r => setTimeout(r, 600));
-      }
-
-      const [interaction, safety, quantum, twin, admet] = await Promise.all([
-        aetherApi.interaction(smilesInput, target),
-        aetherApi.safety(smilesInput, target),
+      setStep(1);
+      const admet = await aetherApi.admet(smilesInput);
+      setStep(2);
+      const safety = await aetherApi.safety(smilesInput, target);
+      setStep(3);
+      const interaction = await aetherApi.interaction(smilesInput, target);
+      setStep(4);
+      const [quantum, twin, manufacturing] = await Promise.all([
         aetherApi.quantum(smilesInput, target),
         aetherApi.digitalTwin(smilesInput),
-        aetherApi.admet(smilesInput),
+        aetherApi.manufacturing(smilesInput),
       ]);
-
       setStep(LAB_STEPS.length);
-      setResults({ interaction, safety, quantum, twin, admet });
+      setResults({ interaction, safety, quantum, twin, admet, manufacturing });
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -62,7 +61,6 @@ export default function DrugLabView() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Input Panel */}
         <div className="lg:col-span-4 glass-panel rounded-2xl p-6 flex flex-col gap-5">
           <h3 className="font-display font-bold text-sm text-aether-secondary uppercase tracking-wider">Create Molecule</h3>
 
@@ -98,25 +96,22 @@ export default function DrugLabView() {
             <Beaker size={16} />
           </button>
 
-          {/* Synthesis Planner */}
           <div className="border-t border-aether-border pt-4 flex flex-col gap-3">
             <h4 className="font-display font-bold text-xs text-aether-accent flex items-center gap-2">
               <TestTube size={14} /> Synthesis Planner
             </h4>
-            {results ? (
+            {results?.manufacturing ? (
               <div className="flex flex-col gap-2 text-xs">
-                <div className="flex justify-between"><span className="text-aether-muted">Synthetic Accessibility</span><span className="font-scientific text-white">{results.admet?.synthetic_accessibility?.toFixed?.(1) ?? '2.4'}</span></div>
-                <div className="flex justify-between"><span className="text-aether-muted">Difficulty</span><span className="text-aether-secondary font-bold">Moderate</span></div>
-                <div className="flex justify-between"><span className="text-aether-muted">Synthesis Score</span><span className="font-scientific text-aether-primary">78/100</span></div>
-                <p className="text-[10px] text-aether-muted mt-1">Reagents: Pd/C, EtOH, reflux 4h → amide coupling</p>
+                <div className="flex justify-between"><span className="text-aether-muted">Synthetic Accessibility</span><span className="font-scientific text-white">{results.manufacturing.synthetic_accessibility}</span></div>
+                <div className="flex justify-between"><span className="text-aether-muted">Complexity</span><span className="text-aether-secondary font-bold">{results.manufacturing.manufacturing_complexity}</span></div>
+                <div className="flex justify-between"><span className="text-aether-muted">Viability Score</span><span className="font-scientific text-aether-primary">{results.manufacturing.industrial_viability_score}/100</span></div>
               </div>
             ) : (
-              <p className="text-[10px] text-aether-muted">Run lab protocol to generate synthesis pathway</p>
+              <p className="text-[10px] text-aether-muted">Run lab protocol to query /v1/manufacturing</p>
             )}
           </div>
         </div>
 
-        {/* Lab Pipeline Visual */}
         <div className="lg:col-span-8 flex flex-col gap-4">
           <div className="glass-panel rounded-2xl p-6">
             <h3 className="font-display font-bold text-sm text-white mb-4">Lab Workflow</h3>
@@ -129,18 +124,15 @@ export default function DrugLabView() {
             {running && step >= 0 && (
               <div className="mt-4 flex items-center gap-2 text-xs text-aether-primary">
                 <Microscope size={14} className="animate-pulse" />
-                <span className="font-scientific">{LAB_STEPS[step] ?? 'Complete'}...</span>
+                <span className="font-scientific">{LAB_STEPS[Math.min(step, LAB_STEPS.length - 1)]}...</span>
               </div>
             )}
           </div>
 
           {error && <ApiError message={error} onRetry={runLab} />}
-
-          {running && !results && !error && <LoadingState message="Executing virtual wet lab protocol..." />}
-
+          {running && !results && !error && <LoadingState message="Executing virtual wet lab protocol via FastAPI..." />}
           {results && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Binding */}
               <div className="glass-panel rounded-2xl p-5 flex flex-col gap-3">
                 <h4 className="font-display font-bold text-xs text-aether-primary flex items-center gap-2">
                   <Atom size={14} /> Binding Simulation
@@ -152,11 +144,10 @@ export default function DrugLabView() {
                   <MetricCard label="IC50" value={results.interaction.affinity.IC50_nM} unit="nM" color="text-aether-accent" />
                 </div>
                 <div className="text-[10px] text-aether-muted">
-                  Hotspots: {results.interaction.binding_hotspots.join(', ')}
+                  Compound: {results.interaction.compound_name} · Hotspots: {results.interaction.binding_hotspots.join(', ')}
                 </div>
               </div>
 
-              {/* Safety */}
               <div className="glass-panel rounded-2xl p-5 flex flex-col gap-3">
                 <h4 className="font-display font-bold text-xs text-aether-danger flex items-center gap-2">
                   <TestTube size={14} /> Toxicity Profile
@@ -165,7 +156,6 @@ export default function DrugLabView() {
                 <MetricCard label="Risk Class" value={results.safety.risk_class} color={results.safety.risk_class === 'Low' ? 'text-aether-success' : 'text-aether-danger'} />
               </div>
 
-              {/* Quantum */}
               <div className="glass-panel rounded-2xl p-5 flex flex-col gap-3">
                 <h4 className="font-display font-bold text-xs text-aether-accent flex items-center gap-2">
                   <Zap size={14} /> Quantum Descriptors
@@ -178,19 +168,19 @@ export default function DrugLabView() {
                 </div>
               </div>
 
-              {/* Virtual Wet Lab */}
               <div className="glass-panel rounded-2xl p-5 flex flex-col gap-3">
                 <h4 className="font-display font-bold text-xs text-aether-primary">Virtual Wet Lab — Drug Journey</h4>
                 <div className="flex items-center gap-1 flex-wrap text-[10px] font-bold">
-                  {['Drug', 'Bloodstream', 'Target Organ', 'Target Protein', 'Cellular Response'].map((s, i) => (
-                    <React.Fragment key={s}>
-                      <span className="px-2 py-1 rounded bg-aether-primary/10 text-aether-primary border border-aether-primary/20">{s}</span>
-                      {i < 4 && <ChevronRight size={12} className="text-aether-muted" />}
+                  {results.twin.journey?.map((j: any, i: number) => (
+                    <React.Fragment key={j.compartment}>
+                      <span className="px-2 py-1 rounded bg-aether-primary/10 text-aether-primary border border-aether-primary/20">{j.compartment}</span>
+                      {i < results.twin.journey.length - 1 && <ChevronRight size={12} className="text-aether-muted" />}
                     </React.Fragment>
                   ))}
                 </div>
                 <MetricCard label="Target Engagement" value={results.twin.pkpd.target_engagement_pct} unit="%" />
                 <MetricCard label="Cmax" value={results.twin.pkpd.cmax_nM} unit="nM" />
+                <MetricCard label="Half-life" value={results.twin.pkpd.half_life_hr} unit="hr" />
               </div>
             </div>
           )}

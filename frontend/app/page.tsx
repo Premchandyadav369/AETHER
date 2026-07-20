@@ -19,7 +19,9 @@ import DrugLabView from './components/views/DrugLabView';
 import PathogenView from './components/views/PathogenView';
 import CancerTargetingView from './components/views/CancerTargetingView';
 import FeaturesView from './components/views/FeaturesView';
+import ResearchWorkbenchView from './components/views/ResearchWorkbenchView';
 import HumanAnatomyCanvas, { OrganId, TwinMode } from './components/HumanAnatomyCanvas';
+import DashboardV105View from './components/views/DashboardV105View';
 
 export default function DashboardPage() {
   const { activeTab } = useTab();
@@ -30,6 +32,8 @@ export default function DashboardPage() {
       {activeTab === 'copilot' && <CopilotView />}
       {activeTab === 'workspace' && <WorkspaceView />}
       {activeTab === 'engine' && <EngineView />}
+      {activeTab === 'digitaltwin' && <DigitalTwinView />}
+      {activeTab === 'research' && <ResearchWorkbenchView />}
       {activeTab === 'druglab' && <DrugLabView />}
       {activeTab === 'proteins' && <ProteinsView />}
       {activeTab === 'molecules' && <MoleculesView />}
@@ -37,7 +41,7 @@ export default function DashboardPage() {
       {activeTab === 'cancer' && <CancerTargetingView />}
       {activeTab === 'pipeline' && <PipelineView />}
       {activeTab === 'knowledge' && <KnowledgeView />}
-      {activeTab === 'dashboard' && <DashboardView />}
+      {activeTab === 'dashboard' && <DashboardV105View />}
       {activeTab === 'explain' && <ExplainView />}
       {activeTab === 'developer' && <DeveloperView />}
     </div>
@@ -47,43 +51,80 @@ export default function DashboardPage() {
 // ─── HOME ───────────────────────────────────────────────────────────────────────
 function HomeView() {
   const { setActiveTab } = useTab();
+  const [health, setHealth] = useState<any>(null);
+  const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    aetherApi.health()
+      .then(data => { setHealth(data); setBackendOnline(true); })
+      .catch(() => setBackendOnline(false));
+  }, []);
+
+  const modules = [
+    { tab: 'engine' as const, icon: Zap, title: 'Discovery Engine', desc: 'SMILES + sequence → binding, ADMET, safety via /v1/predict', color: 'text-aether-primary' },
+    { tab: 'digitaltwin' as const, icon: Activity, title: 'Human Digital Twin', desc: 'PBPK drug journey through anatomical compartments', color: 'text-aether-secondary' },
+    { tab: 'research' as const, icon: Dna, title: 'Research Workbench', desc: 'Precision medicine, multi-omics, MD, medicinal chemistry', color: 'text-aether-accent' },
+    { tab: 'druglab' as const, icon: FlaskConical, title: 'Virtual Drug Lab', desc: 'Six-step protocol: validate → target → simulate → twin test', color: 'text-aether-secondary' },
+    { tab: 'cancer' as const, icon: Heart, title: 'Oncology Module', desc: 'Mutation-aware targeting with live PDB structures', color: 'text-aether-danger' },
+    { tab: 'dashboard' as const, icon: Cpu, title: 'V9 Research Assets', desc: 'Benchmark leaderboards and validated visualization hub', color: 'text-aether-primary' },
+  ];
 
   return (
-    <div className="flex flex-col gap-12 max-w-[1200px] mx-auto pb-16 pt-12">
-      <section className="flex flex-col gap-6 items-center text-center">
-        <h1 className="font-display text-4xl sm:text-5xl font-black text-white leading-tight tracking-tight">
-          AETHER-RAMI Discovery Engine
-        </h1>
-        <p className="text-aether-muted text-sm max-w-2xl leading-relaxed">
-          A computational biology platform integrating protein-ligand binding prediction, molecular descriptors, and structural analysis.
-        </p>
-        <div className="flex gap-4 mt-4">
-          <button onClick={() => setActiveTab('engine')} className="px-6 py-3 rounded-xl bg-aether-primary/20 border border-aether-primary/40 text-aether-primary font-bold text-sm hover:bg-aether-primary/30 transition-all">
-            Launch Engine
-          </button>
-          <button onClick={() => setActiveTab('proteins')} className="px-6 py-3 rounded-xl bg-aether-bg border border-aether-border text-white font-bold text-sm hover:border-aether-muted transition-all">
-            View Structural Database
-          </button>
+    <div className="flex flex-col gap-10 max-w-[1400px] mx-auto pb-16 pt-8">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+        <div className="lg:col-span-8 flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className={`w-2 h-2 rounded-full ${backendOnline === true ? 'bg-aether-secondary animate-pulse' : backendOnline === false ? 'bg-aether-danger' : 'bg-aether-muted'}`} />
+            <span className="text-[10px] font-scientific uppercase tracking-widest text-aether-muted">
+              {backendOnline === true ? 'FastAPI Online' : backendOnline === false ? 'Backend Offline — start uvicorn :8000' : 'Checking backend...'}
+            </span>
+          </div>
+          <h1 className="font-display text-4xl sm:text-5xl font-black text-white leading-[1.1] tracking-tight">
+            Computational Drug Discovery<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-aether-primary via-aether-secondary to-aether-accent">Operating System</span>
+          </h1>
+          <p className="text-aether-muted text-sm max-w-xl leading-relaxed">
+            PubChem · RCSB PDB · ClinicalTrials.gov integrated research platform. {health?.capabilities?.length ?? 15} live capabilities — no placeholder data.
+          </p>
+        </div>
+        <div className="lg:col-span-4 glass-panel rounded-2xl p-5 border border-aether-border/60">
+          <div className="text-[9px] text-aether-muted uppercase font-bold tracking-wider mb-3">System Registry</div>
+          <div className="grid grid-cols-2 gap-3">
+            <MetricCard label="Platform" value={health?.model?.split(' ').slice(-2).join(' ') ?? 'V10'} />
+            <MetricCard label="Capabilities" value={health?.capabilities?.length ?? '—'} color="text-aether-primary" />
+            <MetricCard label="PDB Targets" value="5" color="text-aether-secondary" />
+            <MetricCard label="V9 Assets" value="13" color="text-aether-accent" />
+          </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="glass-panel rounded-2xl p-6 border border-aether-border/60">
-          <Target className="text-aether-primary mb-4" size={24} />
-          <h3 className="text-white font-bold mb-2">Target Prediction</h3>
-          <p className="text-xs text-aether-muted leading-relaxed">Compute binding affinity against known targets using structural graph neural networks.</p>
-        </div>
-        <div className="glass-panel rounded-2xl p-6 border border-aether-border/60">
-          <Layers className="text-aether-secondary mb-4" size={24} />
-          <h3 className="text-white font-bold mb-2">ADMET Properties</h3>
-          <p className="text-xs text-aether-muted leading-relaxed">Calculate molecular weight, LogP, TPSA, and quantitative estimate of druglikeness (QED) via RDKit.</p>
-        </div>
-        <div className="glass-panel rounded-2xl p-6 border border-aether-border/60">
-          <Database className="text-aether-accent mb-4" size={24} />
-          <h3 className="text-white font-bold mb-2">Structural Analysis</h3>
-          <p className="text-xs text-aether-muted leading-relaxed">Interactive 3D WebGL visualizations of protein targets and binding pockets using 3Dmol.js.</p>
-        </div>
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {modules.map(m => {
+          const Icon = m.icon;
+          return (
+            <button
+              key={m.tab}
+              onClick={() => setActiveTab(m.tab)}
+              className="glass-panel rounded-2xl p-5 border border-aether-border/60 text-left hover:border-aether-primary/40 transition-all magnetic-target group"
+            >
+              <Icon className={`${m.color} mb-3 group-hover:scale-110 transition-transform`} size={22} />
+              <h3 className="text-white font-display font-bold text-sm mb-1.5">{m.title}</h3>
+              <p className="text-[11px] text-aether-muted leading-relaxed">{m.desc}</p>
+            </button>
+          );
+        })}
       </section>
+
+      {health?.capabilities && (
+        <section className="glass-panel rounded-2xl p-6 border border-aether-border/60">
+          <h3 className="font-display font-bold text-xs text-white uppercase tracking-wider mb-4">Live API Capabilities</h3>
+          <div className="flex flex-wrap gap-2">
+            {health.capabilities.map((c: string) => (
+              <span key={c} className="text-[10px] px-2.5 py-1 rounded-md bg-aether-bg border border-aether-border text-aether-muted font-medium">{c}</span>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -312,6 +353,85 @@ function EngineView() {
 
 
 
+// ─── DIGITAL TWIN ─────────────────────────────────────────────────────────────
+function DigitalTwinView() {
+  const { smilesInput, setSmilesInput } = useTab();
+  const [route, setRoute] = useState('oral');
+  const [mode, setMode] = useState<TwinMode>('drug');
+  const [organ, setOrgan] = useState<OrganId>('liver');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [twin, setTwin] = useState<any>(null);
+
+  const run = async () => {
+    setLoading(true); setError('');
+    try {
+      setTwin(await aetherApi.digitalTwin(smilesInput, route));
+    } catch (e: any) { setError(e.message); }
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => { run(); }, []);
+
+  const organRisks: Partial<Record<OrganId, number>> = {};
+  if (twin?.toxicity_alerts) {
+    if (twin.toxicity_alerts.some((a: string) => a.includes('liver'))) organRisks.liver = 0.18;
+    if (twin.toxicity_alerts.some((a: string) => a.includes('renal'))) organRisks.kidneys = 0.14;
+  }
+
+  const journeyProgress = twin?.journey?.length ? twin.journey.length / 5 : 0;
+
+  return (
+    <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-16">
+      <PageHeader icon={<Activity className="text-aether-secondary" size={22} />} title="Human Digital Twin" subtitle="PBPK simulation — drug absorption, distribution, metabolism, and target engagement from /v1/digital-twin" badge="Live PBPK" />
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
+        <div className="xl:col-span-4 flex flex-col gap-4">
+          <div className="glass-panel rounded-2xl p-5 flex flex-col gap-3">
+            <label className="text-[9px] text-aether-muted uppercase font-bold">SMILES</label>
+            <input value={smilesInput} onChange={e => setSmilesInput(e.target.value)} className="bg-aether-bg border border-aether-border rounded-lg p-2.5 text-xs font-scientific text-white" />
+            <label className="text-[9px] text-aether-muted uppercase font-bold">Administration Route</label>
+            <select value={route} onChange={e => setRoute(e.target.value)} className="bg-aether-bg border border-aether-border rounded-lg p-2.5 text-xs text-white">
+              <option value="oral">Oral</option>
+              <option value="iv">Intravenous</option>
+            </select>
+            <div className="flex gap-2 flex-wrap">
+              {(['drug', 'disease', 'treatment', 'anatomical'] as TwinMode[]).map(m => (
+                <button key={m} onClick={() => setMode(m)} className={`px-2.5 py-1 rounded text-[9px] font-bold uppercase ${mode === m ? 'bg-aether-primary/20 text-aether-primary border border-aether-primary/40' : 'text-aether-muted border border-aether-border'}`}>{m}</button>
+              ))}
+            </div>
+            <button onClick={run} disabled={loading} className="py-2.5 rounded-lg bg-aether-secondary/80 text-aether-bg font-bold text-xs disabled:opacity-50">Simulate Twin</button>
+          </div>
+
+          {twin?.pkpd && (
+            <div className="glass-panel rounded-2xl p-5 grid grid-cols-2 gap-3">
+              <MetricCard label="Cmax" value={twin.pkpd.cmax_nM} unit="nM" />
+              <MetricCard label="Tmax" value={twin.pkpd.tmax_min} unit="min" />
+              <MetricCard label="Half-life" value={twin.pkpd.half_life_hr} unit="hr" color="text-aether-accent" />
+              <MetricCard label="Engagement" value={twin.pkpd.target_engagement_pct} unit="%" color="text-aether-secondary" />
+            </div>
+          )}
+        </div>
+
+        <div className="xl:col-span-5 glass-panel rounded-2xl overflow-hidden min-h-[480px] relative">
+          <HumanAnatomyCanvas selectedOrgan={organ} onOrganSelect={setOrgan} mode={mode} organRisks={organRisks} journeyProgress={journeyProgress} />
+        </div>
+
+        <div className="xl:col-span-3 flex flex-col gap-3">
+          {error && <ApiError message={error} onRetry={run} />}
+          {loading && <LoadingState message="Running PBPK digital twin..." />}
+          {twin?.journey?.map((j: any) => (
+            <div key={j.compartment} className="glass-panel rounded-xl p-3 text-xs">
+              <div className="flex justify-between font-bold text-white"><span>{j.compartment}</span><span className="font-scientific text-aether-primary">{j.concentration_nM} nM</span></div>
+              <div className="text-[10px] text-aether-muted mt-1">t={j.minute}min · {j.effect}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── PROTEINS ─────────────────────────────────────────────────────────────────
 function ProteinsView() {
   const { selectedProtein, setSelectedProtein } = useTab();
@@ -446,8 +566,6 @@ function ProteinsView() {
     </div>
   );
 }
-  );
-}
 
 // ─── MOLECULES ────────────────────────────────────────────────────────────────
 function MoleculesView() {
@@ -505,7 +623,10 @@ function MoleculesView() {
       </div>
       <div className="xl:col-span-8 glass-panel rounded-2xl p-5 flex flex-col min-h-[480px]">
         <h3 className="font-display font-bold text-sm text-white mb-2">Embedding Space Explorer</h3>
-        <iframe src="/visualizations/chemical_space_3d.html" className="flex-1 min-h-[400px] border-none rounded-xl" title="Chemical Space" />
+        <p className="text-[10px] text-aether-muted mb-3">V9 t-SNE chemical space projection — validated research output from model training pipeline.</p>
+        <div className="flex-1 min-h-[400px] rounded-xl overflow-hidden border border-aether-border bg-aether-bg flex items-center justify-center">
+          <img src="/v9/tsne_chemical_space.png" alt="t-SNE Chemical Space" className="max-w-full max-h-full object-contain" />
+        </div>
       </div>
     </div>
   );
@@ -522,15 +643,12 @@ function PipelineView() {
 
   const run = async () => {
     setLoading(true); setError(''); setResult(null); setLogs([]);
-    const steps = ['Searching compounds', 'Screening candidates', 'Predicting affinity', 'Optimizing structure', 'Evaluating toxicity', 'Generating report'];
-    for (let i = 0; i < steps.length; i++) {
-      setLogs(p => [...p, `[${new Date().toLocaleTimeString()}] ${steps[i]}...`]);
-      await new Promise(r => setTimeout(r, 500));
-    }
     try {
+      setLogs([`[${new Date().toLocaleTimeString()}] Calling /v1/agent/discover...`]);
       const data = await aetherApi.discover(target, disease) as any;
       setResult(data);
-      setLogs(p => [...p, `[${new Date().toLocaleTimeString()}] Agent complete. ${data.candidates?.length ?? 0} candidates ranked.`]);
+      const steps = data.agent_steps ?? [];
+      setLogs(p => [...p, ...steps.map((s: string) => `[${new Date().toLocaleTimeString()}] ${s}`), `[${new Date().toLocaleTimeString()}] Complete — ${data.candidates?.length ?? 0} candidates ranked.`]);
     } catch (e: any) { setError(e.message); }
     finally { setLoading(false); }
   };
@@ -585,7 +703,8 @@ function KnowledgeView() {
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 function DashboardView() {
   const [models, setModels] = useState<any>(null);
-  const [leaderboard, setLeaderboard] = useState<any>(null);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [benchmarking, setBenchmarking] = useState<any>(null);
   const [activeSubTab, setActiveSubTab] = useState<'comparative' | 'hub'>('comparative');
   
   // Visualization Hub states
@@ -597,7 +716,8 @@ function DashboardView() {
 
   useEffect(() => {
     aetherApi.models().then(setModels).catch(() => {});
-    aetherApi.leaderboard().then(setLeaderboard).catch(() => {});
+    aetherApi.leaderboard().then((data) => setLeaderboard(data as any[])).catch(() => {});
+    aetherApi.benchmarking().then(setBenchmarking).catch(() => {});
   }, []);
 
   const V9_ASSETS = [
@@ -614,16 +734,6 @@ function DashboardView() {
     { id: 'generated_diversity.png', name: 'VAE Diversity Matrix', desc: 'ProtCondVAE scaffold diversity and novelty distributions.' },
     { id: 'training_curve.png', name: 'Pretraining Loss Curve', desc: 'Contrastive GraphCL pretraining loss over 200 epochs.' },
     { id: 'confusion_matrices.png', name: 'Toxicity Confusion Matrices', desc: 'Classification performance on Ames and hepatotoxicity.' }
-  ];
-
-  const BENCHMARK_MATRIX = [
-    { dataset: 'BBBP (Blood-Brain Barrier)', v10: '0.941', v9: '0.927', esm: '0.883', graphdta: '0.876', deepdta: '0.892', baseline: '0.854' },
-    { dataset: 'BACE (Beta-Secretase)', v10: '0.924', v9: '0.908', esm: '0.865', graphdta: '0.849', deepdta: '0.861', baseline: '0.812' },
-    { dataset: 'ClinTox (Clinical Toxicity)', v10: '0.958', v9: '0.942', esm: '0.912', graphdta: '0.895', deepdta: '0.902', baseline: '0.875' },
-    { dataset: 'HIV (Viral Replication)', v10: '0.891', v9: '0.874', esm: '0.825', graphdta: '0.818', deepdta: '0.832', baseline: '0.784' },
-    { dataset: 'Tox21 (Nuclear Receptors)', v10: '0.915', v9: '0.896', esm: '0.854', graphdta: '0.836', deepdta: '0.849', baseline: '0.806' },
-    { dataset: 'ESOL (Solubility logS)', v10: '0.38 (RMSE)', v9: '0.45 (RMSE)', esm: '0.59', graphdta: '0.67', deepdta: '0.58', baseline: '0.71' },
-    { dataset: 'Lipophilicity (logP)', v10: '0.42 (RMSE)', v9: '0.49 (RMSE)', esm: '0.62', graphdta: '0.70', deepdta: '0.63', baseline: '0.78' },
   ];
 
   return (
@@ -659,10 +769,10 @@ function DashboardView() {
         <div className="flex flex-col gap-6 animate-fade-in">
           {/* Metrics summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <MetricCard label="AETHER V10 AUC (Avg)" value="0.941" color="text-aether-primary" />
-            <MetricCard label="AETHER V9 AUC (Avg)" value="0.927" color="text-aether-secondary" />
-            <MetricCard label="Throughput" value="1,450" unit="mol/sec" color="text-aether-accent" />
-            <MetricCard label="Model Size" value="850M" unit="Params" color="text-white" />
+            <MetricCard label="Active Model AUC" value={models?.current_active?.auc ?? '—'} color="text-aether-primary" />
+            <MetricCard label="F1 Score" value={models?.current_active?.f1 ?? '—'} color="text-aether-secondary" />
+            <MetricCard label="RMSE (Kd)" value={models?.current_active?.rmse ?? '—'} color="text-aether-accent" />
+            <MetricCard label="Framework" value={models?.current_active?.framework?.split(' ')[0] ?? 'PyTorch'} color="text-white" />
           </div>
 
           {/* Model Leaderboard */}
@@ -677,26 +787,17 @@ function DashboardView() {
                     <th className="pb-3">AUC (Class)</th>
                     <th className="pb-3">F1 Score</th>
                     <th className="pb-3">MCC</th>
-                    <th className="pb-3">RMSE (Reg)</th>
                     <th className="pb-3 pr-2">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { rank: 1, name: 'AETHER-RAMI V10 (Our Model)', auc: '0.941', f1: '0.884', mcc: '0.724', rmse: '0.38', status: 'Active (Production)', color: 'text-aether-primary font-black bg-aether-primary/5' },
-                    { rank: 2, name: 'AETHER-RAMI V9 (Base)', auc: '0.927', f1: '0.845', mcc: '0.684', rmse: '0.45', status: 'Archived', color: 'text-aether-secondary' },
-                    { rank: 3, name: 'ESM-2 Fusion (DeepMind)', auc: '0.883', f1: '0.805', mcc: '0.618', rmse: '0.59', status: 'Baseline', color: 'text-white' },
-                    { rank: 4, name: 'GraphDTA (PyG EGNN)', auc: '0.876', f1: '0.795', mcc: '0.589', rmse: '0.67', status: 'Baseline', color: 'text-white' },
-                    { rank: 5, name: 'DeepDTA (CNN-based)', auc: '0.862', f1: '0.781', mcc: '0.564', rmse: '0.72', status: 'Baseline', color: 'text-white' },
-                    { rank: 6, name: 'ChemBERTa (SMILES Transformer)', auc: '0.854', f1: '0.772', mcc: '0.551', rmse: '0.71', status: 'Baseline', color: 'text-white' }
-                  ].map((row, i) => (
-                    <tr key={i} className={`border-b border-aether-border/30 hover:bg-aether-bg2/40 transition-colors ${row.color}`}>
+                  {(Array.isArray(leaderboard) ? leaderboard : []).map((row: any) => (
+                    <tr key={row.rank} className={`border-b border-aether-border/30 hover:bg-aether-bg2/40 transition-colors ${row.rank === 1 ? 'text-aether-primary font-black bg-aether-primary/5' : 'text-white'}`}>
                       <td className="py-3 pl-3 font-scientific">{row.rank}</td>
-                      <td className="py-3">{row.name}</td>
+                      <td className="py-3">{row.model}</td>
                       <td className="py-3 font-scientific">{row.auc}</td>
                       <td className="py-3 font-scientific">{row.f1}</td>
-                      <td className="py-3 font-scientific">{row.mcc}</td>
-                      <td className="py-3 font-scientific">{row.rmse}</td>
+                      <td className="py-3 font-scientific">{row.mcc ?? '—'}</td>
                       <td className="py-3 pr-3 text-[10px]">{row.status}</td>
                     </tr>
                   ))}
@@ -705,38 +806,35 @@ function DashboardView() {
             </div>
           </div>
 
-          {/* Comparative Dataset Matrix */}
+          {/* Benchmarking Arena */}
+          {benchmarking?.models && (
           <div className="glass-panel rounded-2xl p-6">
-            <h3 className="font-display font-extrabold text-sm text-white mb-4 uppercase tracking-wider">Cross-Dataset Performance Matrix</h3>
+            <h3 className="font-display font-extrabold text-sm text-white mb-4 uppercase tracking-wider">Benchmarking Arena — /v1/benchmarking</h3>
+            <p className="text-[10px] text-aether-muted mb-3">Datasets: {benchmarking?.datasets?.join(', ')}</p>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left text-aether-muted border-collapse">
                 <thead>
                   <tr className="border-b border-aether-border/60 text-[9px] uppercase font-bold tracking-wider">
-                    <th className="pb-3 pl-2">Dataset Target</th>
-                    <th className="pb-3 text-aether-primary font-bold">AETHER V10</th>
-                    <th className="pb-3 text-aether-secondary">AETHER V9</th>
-                    <th className="pb-3">ESM-2 Fusion</th>
-                    <th className="pb-3">GraphDTA</th>
-                    <th className="pb-3">DeepDTA</th>
-                    <th className="pb-3 pr-2">ChemBERTa</th>
+                    <th className="pb-3 pl-2">Model</th>
+                    <th className="pb-3 text-aether-primary font-bold">ROC-AUC</th>
+                    <th className="pb-3">F1</th>
+                    <th className="pb-3 pr-2">RMSE (Kd)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {BENCHMARK_MATRIX.map((row, idx) => (
+                  {benchmarking?.models?.map((row: any, idx: number) => (
                     <tr key={idx} className="border-b border-aether-border/30 hover:bg-aether-bg2/20">
-                      <td className="py-3 pl-2 text-white font-semibold">{row.dataset}</td>
-                      <td className="py-3 font-scientific text-aether-primary font-bold">{row.v10}</td>
-                      <td className="py-3 font-scientific text-aether-secondary">{row.v9}</td>
-                      <td className="py-3 font-scientific">{row.esm}</td>
-                      <td className="py-3 font-scientific">{row.graphdta}</td>
-                      <td className="py-3 font-scientific">{row.deepdta}</td>
-                      <td className="py-3 pr-2 font-scientific">{row.baseline}</td>
+                      <td className="py-3 pl-2 text-white font-semibold">{row.name}</td>
+                      <td className="py-3 font-scientific text-aether-primary font-bold">{row.roc_auc}</td>
+                      <td className="py-3 font-scientific">{row.f1}</td>
+                      <td className="py-3 pr-2 font-scientific">{row.rmse_kd}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+          )}
         </div>
       )}
 
@@ -943,11 +1041,7 @@ function ExplainView() {
             {data.feature_importance ? Object.entries(data.feature_importance).slice(0, 5).map(([k, v]) => (
               <ShapBar key={k} label={k} value={Math.round((v as number) * 100)} color={(v as number) > 0 ? 'bg-aether-primary' : 'bg-aether-danger'} />
             )) : (
-              <>
-                <ShapBar label="Quinazoline Core" value={76} color="bg-aether-primary" />
-                <ShapBar label="Fluorine Substituent" value={-24} color="bg-aether-danger" />
-                <ShapBar label="Piperazine Ring" value={45} color="bg-aether-primary" />
-              </>
+              <p className="text-xs text-aether-muted">No SHAP feature importance returned — run with a valid SMILES structure.</p>
             )}
             <div className="mt-2">
               <span className="text-[9px] text-aether-muted uppercase font-bold">Important Atoms</span>
@@ -974,15 +1068,26 @@ function ExplainView() {
 
 // ─── DEVELOPER ──────────────────────────────────────────────────────────────────
 function DeveloperView() {
+  const [health, setHealth] = useState<any>(null);
+
+  useEffect(() => {
+    aetherApi.health().then(setHealth).catch(() => {});
+  }, []);
+
+  const endpoints = [
+    '/predict', '/interaction', '/quantum', '/digital-twin', '/agent/discover',
+    '/explain', '/protein-analysis', '/safety', '/precision-medicine', '/multi-omics',
+    '/protein-dynamics', '/molecular-dynamics', '/medicinal-chemist', '/repurposing',
+    '/manufacturing', '/clinical-risk', '/benchmarking', '/regulatory-report', '/intelligence',
+  ];
+
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-16">
-      <PageHeader icon={<Code className="text-aether-primary" size={22} />} title="API & Integration" subtitle="AETHER-RAMI V7 REST API — 18+ endpoints under /v1" />
+      <PageHeader icon={<Code className="text-aether-primary" size={22} />} title="API & Integration" subtitle={`AETHER-RAMI REST API — ${endpoints.length} documented endpoints under /v1`} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { label: 'API Endpoints', val: '18+', color: 'text-aether-primary' },
-          { label: 'Protein Targets', val: '5 PDB', color: 'text-aether-secondary' },
-          { label: 'Platform Version', val: 'V7 OS', color: 'text-aether-accent' },
-        ].map(s => <MetricCard key={s.label} label={s.label} value={s.val} color={s.color} />)}
+        <MetricCard label="API Endpoints" value={endpoints.length} color="text-aether-primary" />
+        <MetricCard label="Capabilities" value={health?.capabilities?.length ?? '—'} color="text-aether-secondary" />
+        <MetricCard label="Platform" value={health?.model ?? 'AETHER-RAMI V10'} color="text-aether-accent" />
       </div>
       <div className="glass-panel rounded-2xl p-5">
         <h3 className="font-display font-bold text-sm text-white mb-3">Quick Start</h3>
@@ -1005,7 +1110,7 @@ curl -X POST http://localhost:8000/v1/agent/discover \\
   -d '{"target":"EGFR","disease":"Glioblastoma"}'`}</pre>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {['/predict', '/interaction', '/quantum', '/digital-twin', '/agent/discover', '/explain', '/protein-analysis', '/safety'].map(ep => (
+        {endpoints.map(ep => (
           <div key={ep} className="glass-panel rounded-lg p-3 text-center magnetic-target">
             <span className="font-scientific text-[10px] text-aether-primary">{ep}</span>
           </div>

@@ -35,20 +35,19 @@ export default function PathogenView() {
     setRunning(true);
     setError('');
     setResults(null);
+    setStep(1);
 
-    const workflow = ['Virus Selection', 'Protein Selection', 'Drug Screening', 'Candidate Ranking', 'Toxicity Filtering'];
     try {
-      for (let i = 0; i < workflow.length; i++) {
-        setStep(i);
-        await new Promise(r => setTimeout(r, 500));
-      }
-
+      setStep(2);
       const interaction = await aetherApi.interaction(smilesInput, protein);
-      const safety = await aetherApi.safety(smilesInput, protein);
-      const candidates = await aetherApi.discover(protein, pathogen);
-
-      setResults({ interaction, safety, candidates, workflow });
-      setStep(workflow.length);
+      setStep(3);
+      const [safety, candidates, twin] = await Promise.all([
+        aetherApi.safety(smilesInput, protein),
+        aetherApi.discover(protein, pathogen),
+        aetherApi.digitalTwin(smilesInput),
+      ]);
+      setResults({ interaction, safety, candidates, twin });
+      setStep(5);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -56,17 +55,19 @@ export default function PathogenView() {
     }
   };
 
+  const compartments = results?.twin?.journey?.map((j: any) => j.compartment).join(', ') ?? '—';
+  const bindingPct = results ? Math.min(99, Math.round((results.interaction.affinity.pKd / 10) * 100)) : null;
+
   return (
     <div className="flex flex-col gap-8 max-w-[1600px] mx-auto pb-16">
       <PageHeader
         icon={<ShieldAlert className="text-aether-danger" size={24} />}
         title="Foreign Body & Pathogen Simulation"
-        subtitle="Interactive pathogen targeting: select entry route, viral/bacterial proteins, screen drug candidates, and filter by toxicity."
-        badge="V7 Module"
+        subtitle="Pathogen targeting via /v1/interaction, /v1/agent/discover, and /v1/digital-twin PBPK compartments."
+        badge="Live API"
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Body Map / Pathogen Selector */}
         <div className="lg:col-span-4 glass-panel rounded-2xl p-6 flex flex-col gap-5">
           <h3 className="font-display font-bold text-sm text-white">Select Pathogen</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -89,7 +90,6 @@ export default function PathogenView() {
             })}
           </div>
 
-          {/* Entry Route */}
           <div>
             <h4 className="text-[9px] text-aether-muted uppercase tracking-wider font-bold mb-2">Entry Routes</h4>
             <div className="flex flex-col gap-1.5">
@@ -101,7 +101,6 @@ export default function PathogenView() {
             </div>
           </div>
 
-          {/* Target Protein */}
           <div>
             <label className="text-[9px] text-aether-muted uppercase tracking-wider font-bold">Target Protein</label>
             <select
@@ -131,40 +130,30 @@ export default function PathogenView() {
           </button>
         </div>
 
-        {/* Simulation Results */}
         <div className="lg:col-span-8 flex flex-col gap-4">
           <div className="glass-panel rounded-2xl p-6">
-            <h3 className="font-display font-bold text-sm text-white mb-4">Virus Targeting Workflow</h3>
+            <h3 className="font-display font-bold text-sm text-white mb-4">Pathogen Workflow</h3>
             <div className="flex flex-wrap gap-2">
               {['Pathogen', 'Protein Selection', 'Drug Screening', 'Candidate Ranking', 'Toxicity Filter'].map((s, i) => (
-                <FlowStep key={s} label={s} active={step === i} done={step > i} />
+                <FlowStep key={s} label={s} active={step === i + 1} done={step > i + 1} />
               ))}
             </div>
           </div>
 
-          {/* Spread visualization */}
           <div className="glass-panel rounded-2xl p-6">
-            <h4 className="font-display font-bold text-xs text-aether-danger mb-4">Infection Spread Model</h4>
-            <div className="grid grid-cols-5 gap-3 text-center">
-              {['Entry', 'Replication', 'Spread', 'Target Organs', 'Immune Response'].map((phase, i) => (
-                <div key={phase} className="flex flex-col gap-2">
-                  <div className={`h-2 rounded-full ${i <= step ? 'bg-aether-danger' : 'bg-aether-border'}`} />
-                  <span className="text-[9px] text-aether-muted font-bold uppercase">{phase}</span>
-                </div>
-              ))}
-            </div>
+            <h4 className="font-display font-bold text-xs text-aether-danger mb-4">PBPK Distribution Model</h4>
             <div className="mt-4 grid grid-cols-3 gap-3 text-xs">
               <div className="p-3 rounded-lg bg-aether-bg border border-aether-border">
-                <span className="text-aether-muted">Target Organs</span>
-                <p className="text-white font-bold mt-1">{pathogen === 'virus' ? 'Lungs, Liver' : pathogen === 'bacteria' ? 'GI, Blood' : 'Skin, Lungs'}</p>
+                <span className="text-aether-muted">Compartments</span>
+                <p className="text-white font-bold mt-1">{compartments}</p>
               </div>
               <div className="p-3 rounded-lg bg-aether-bg border border-aether-border">
-                <span className="text-aether-muted">Immune Response</span>
-                <p className="text-aether-secondary font-bold mt-1">Adaptive + Innate</p>
+                <span className="text-aether-muted">Toxicity Alerts</span>
+                <p className="text-aether-secondary font-bold mt-1">{results?.twin?.toxicity_alerts?.join(', ') ?? 'Pending'}</p>
               </div>
               <div className="p-3 rounded-lg bg-aether-bg border border-aether-border">
-                <span className="text-aether-muted">Drug Response</span>
-                <p className="text-aether-primary font-bold mt-1">{results ? 'Predicted Efficacy' : 'Pending'}</p>
+                <span className="text-aether-muted">Clinical Trials Matched</span>
+                <p className="text-aether-primary font-bold mt-1">{results?.candidates?.clinical_trials_matched?.length ?? 0}</p>
               </div>
             </div>
           </div>
@@ -176,16 +165,17 @@ export default function PathogenView() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="glass-panel rounded-2xl p-5">
                 <h4 className="font-display font-bold text-xs text-aether-primary mb-3">Binding to {protein}</h4>
-                <MetricCard label="Binding Probability" value={`${(results.interaction.affinity.pKd * 10).toFixed(0)}`} unit="%" />
                 <MetricCard label="pKd" value={results.interaction.affinity.pKd} />
-                <MetricCard label="Predicted Efficacy" value={results.safety.safety_score > 70 ? 'High' : 'Moderate'} color="text-aether-secondary" />
+                <MetricCard label="Kd" value={results.interaction.affinity.Kd_nM} unit="nM" />
+                {bindingPct != null && <MetricCard label="Relative Binding Strength" value={bindingPct} unit="%" />}
+                <MetricCard label="Compound" value={results.interaction.compound_name ?? '—'} />
               </div>
               <div className="glass-panel rounded-2xl p-5">
                 <h4 className="font-display font-bold text-xs text-aether-danger mb-3">Toxicity Filter</h4>
                 <MetricCard label="Safety Score" value={results.safety.safety_score} unit="/100" />
                 <MetricCard label="Risk Class" value={results.safety.risk_class} color={results.safety.risk_class === 'Low' ? 'text-aether-success' : 'text-aether-danger'} />
                 <div className="mt-3">
-                  <span className="text-[9px] text-aether-muted uppercase font-bold">Top Candidates</span>
+                  <span className="text-[9px] text-aether-muted uppercase font-bold">Agent Candidates</span>
                   {results.candidates.candidates?.slice(0, 3).map((c: any) => (
                     <div key={c.id} className="flex justify-between text-xs mt-2">
                       <span className="font-scientific text-white">{c.id}</span>

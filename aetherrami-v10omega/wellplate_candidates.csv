@@ -1,0 +1,16 @@
+Well,Row,Column,Type,SMILES,ID,Source
+A01,A,1,POSITIVE_CONTROL,CONTROL_BUFFER,CONTROL,
+A02,A,2,SAMPLE,NS(=O)(=O)c1cc2c(cc1Cl)NC=NS2(=O)=O,BALD_01,BALD
+A03,A,3,SAMPLE,Nc1ccc(-c2nc3ccc(O)cc3s2)cc1I,BALD_02,BALD
+A04,A,4,SAMPLE,CC(C)(C)NCC(O)COc1cccc2c1CCC(=O)N2,BALD_03,BALD
+A05,A,5,SAMPLE,OC(CCN1CCCC1)(c1ccccc1)C1CCCCC1,BALD_04,BALD
+A06,A,6,SAMPLE,COc1ccc([C@@H]2Sc3ccccc3N(CCN(C)C)C(=O)[C@@H]2OC(C)=O)cc1,BALD_05,BALD
+A07,A,7,SAMPLE,COc1cc([C@@H]2c3cc4c(cc3[C@@H](O[C@@H]3O[C@@H]5CO[C@@H](C)O[C@H]5[C@H](O)[C@H]3O)C3COC(=O)[C@@H]32)OCO4)cc(OC)c1O,Entropy_01,Entropy
+A08,A,8,SAMPLE,CC/C(=C(/CC)c1ccc(O)cc1)c1ccc(O)cc1,Entropy_02,Entropy
+A09,A,9,SAMPLE,CC(=O)[C@H]1CC[C@H]2[C@@H]3CC[C@@H]4C[C@H](O)CC[C@]4(C)[C@H]3CC[C@]12C,Entropy_04,Entropy
+A10,A,10,SAMPLE,C[C@H]1O[C@@H](O[C@H]2[C@@H](O)C[C@H](O[C@H]3[C@@H](O)C[C@H](O[C@H]4CC[C@@]5(C)[C@H](CC[C@@H]6[C@@H]5CC[C@]5(C)[C@H](C7=CC(=O)OC7)CC[C@]65O)C4)O[C@@H]3C)O[C@@H]2C)C[C@H](O)[C@@H]1O,Entropy_05,Entropy
+A11,A,11,SAMPLE,CCN1CCN(C(=O)N[C@@H](C(=O)N[C@@H]2C(=O)N3C(C(=O)O)=C(CSc4nnnn4C)CS[C@H]23)c2ccc(O)cc2)C(=O)C1=O,CoreSet_01,CoreSet
+A12,A,12,SAMPLE,CC1CCCC1,CoreSet_02,CoreSet
+B01,B,1,SAMPLE,CC(C)(C)c1ccc(CN2CCN(C(c3ccccc3)c3ccc(Cl)cc3)CC2)cc1,CoreSet_03,CoreSet
+B02,B,2,SAMPLE,CN[C@@H]1[C@@H](O[C@H]2O[C@H](CO)[C@@H](N)[C@H](O)[C@H]2O)O[C@H]2C[C@@H](N)[C@H](O[C@H]3[C@H](O)[C@@H](O)[C@H](N)C[C@@H]3N)O[C@@H]2[C@@H]1O,CoreSet_04,CoreSet
+B03,B,3,SAMPLE,O=C(O)CCc1nc(-c2ccccc2)c(-c2ccccc2)o1,CoreSet_05,CoreSet
