@@ -1,58 +1,46 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Next.js
-.next/
-out/
-build/
-
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-*.pyc
+
+# Caches & temporary run matrices
+cache/
+outputs/
+protein_structures/
+visualizations/
+*.npy
+*.npz
+root/.cache/
+
+# Environments & virtualenvs
 .env
 .venv
+env/
 venv/
-*.egg-info/
+ENV/
+bin/
+lib/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
 
-# Environment variables
+# Frontend (Node.js)
+node_modules/
+.next/
+out/
+build/
+.DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env
-
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Large ML model files (too big for git)
-*.bin
-*.pt
-*.pth
-*.ckpt
-*.safetensors
-*.pkl
-*.npy
-
-# Keep PDB files (they're important structural data)
-!*.pdb
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts

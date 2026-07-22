@@ -19,7 +19,8 @@ export type Tab =
   | 'pathogens'
   | 'cancer'
   | 'features'
-  | 'research';
+  | 'research'
+  | 'omega';
 
 interface TabContextType {
   activeTab: Tab;

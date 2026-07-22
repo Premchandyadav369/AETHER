@@ -131,6 +131,49 @@ export const aetherApi = {
 
   intelligence: (query: string) =>
     apiFetch(`/intelligence?query=${encodeURIComponent(query)}`),
+
+  fetchPubChemData: async (smiles: string) => {
+    try {
+      const url = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/${encodeURIComponent(smiles)}/property/MolecularWeight,MolecularFormula,IUPACName,XLogP,TPSA,HBondDonorCount,HBondAcceptorCount,RotatableBondCount,HeavyAtomCount/JSON`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const props = data?.PropertyTable?.Properties?.[0];
+      if (!props) return null;
+      return {
+        mw: parseFloat(props.MolecularWeight || '0'),
+        formula: props.MolecularFormula || '',
+        iupac: props.IUPACName || '',
+        logp: parseFloat(props.XLogP || '0'),
+        tpsa: parseFloat(props.TPSA || '0'),
+        hbd: parseInt(props.HBondDonorCount || '0', 10),
+        hba: parseInt(props.HBondAcceptorCount || '0', 10),
+        rotBonds: parseInt(props.RotatableBondCount || '0', 10),
+        heavyAtoms: parseInt(props.HeavyAtomCount || '0', 10),
+        cid: props.CID || null
+      };
+    } catch {
+      return null;
+    }
+  },
+
+  fetchRcsbPdbData: async (pdbId: string) => {
+    try {
+      const url = `https://data.rcsb.org/rest/v1/core/entry/${encodeURIComponent(pdbId.toLowerCase())}`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return {
+        title: data?.struct?.title || '',
+        method: data?.exptl?.[0]?.method || 'X-RAY DIFFRACTION',
+        resolution: data?.rcsb_entry_info?.resolution_combined?.[0] ? `${data.rcsb_entry_info.resolution_combined[0]} Å` : 'N/A',
+        depositDate: data?.rcsb_accession_info?.deposit_date ? data.rcsb_accession_info.deposit_date.split('T')[0] : '',
+        organism: data?.rcsb_entry_container_identifiers?.pubmed_id ? 'Homo sapiens' : 'Target Organism'
+      };
+    } catch {
+      return null;
+    }
+  }
 };
 
 export type ApiStatus = 'idle' | 'loading' | 'success' | 'error';

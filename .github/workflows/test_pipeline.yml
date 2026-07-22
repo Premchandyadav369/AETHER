@@ -1,0 +1,37 @@
+name: AETHER-RAMI V10 OMEGA CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxrender1 libxext6
+
+    - name: Install RDKit, PyTorch, & PyG
+      run: |
+        python -m pip install --upgrade pip
+        pip install torch==2.1.2 --extra-index-url https://download.pytorch.org/whl/cpu
+        pip install torch-geometric
+        pip install rdkit-pypi joblib scikit-learn numpy scipy pandas tqdm
+
+    - name: Run Smoke Test on Pipeline Ingestion
+      run: |
+        python -c "import rdkit; import torch; print('RDKit and PyTorch are loaded successfully!')"

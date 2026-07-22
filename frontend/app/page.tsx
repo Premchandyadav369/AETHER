@@ -22,11 +22,13 @@ import FeaturesView from './components/views/FeaturesView';
 import ResearchWorkbenchView from './components/views/ResearchWorkbenchView';
 import HumanAnatomyCanvas, { OrganId, TwinMode } from './components/HumanAnatomyCanvas';
 import DashboardV105View from './components/views/DashboardV105View';
+import OmegaWorkbenchView from './components/views/OmegaWorkbenchView';
 
 export default function DashboardPage() {
   const { activeTab } = useTab();
   return (
     <div className="w-full">
+      {activeTab === 'omega' && <OmegaWorkbenchView />}
       {activeTab === 'home' && <HomeView />}
       {activeTab === 'features' && <FeaturesView />}
       {activeTab === 'copilot' && <CopilotView />}
@@ -61,6 +63,7 @@ function HomeView() {
   }, []);
 
   const modules = [
+    { tab: 'omega' as const, icon: FlaskConical, title: 'V10.5 OMEGA Workbench', desc: 'Enterprise 3-pane dense lab interface with PLIP 3D, HTS plate & LIMS export', color: 'text-teal-400' },
     { tab: 'engine' as const, icon: Zap, title: 'Discovery Engine', desc: 'SMILES + sequence → binding, ADMET, safety via /v1/predict', color: 'text-aether-primary' },
     { tab: 'digitaltwin' as const, icon: Activity, title: 'Human Digital Twin', desc: 'PBPK drug journey through anatomical compartments', color: 'text-aether-secondary' },
     { tab: 'research' as const, icon: Dna, title: 'Research Workbench', desc: 'Precision medicine, multi-omics, MD, medicinal chemistry', color: 'text-aether-accent' },

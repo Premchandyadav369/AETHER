@@ -2102,6 +2102,55 @@ Cite Run B (the "best run") as the headline verified result, but link or footnot
 
 ---
 
+## 🚀 End-to-End Deployment Guide (Frontend & Backend)
+
+### 1. Repository Setup & Git LFS Initialization
+Model weights (`cross_attention.pt`, `graph_models.pt`) and FAISS binary indexes require Git LFS:
+```bash
+# Initialize Git Large File Storage
+git lfs install
+
+# Track PyTorch weights, pickles, and FAISS binaries
+git lfs track "*.pt"
+git lfs track "*.pkl"
+git lfs track "*.bin"
+git add .gitattributes
+```
+
+### 2. Backend Deployment (FastAPI, PyTorch & RDKit)
+```bash
+# 1. Navigate to backend directory and create Python 3.12 environment
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 2. Install dependencies (PyTorch CPU/CUDA, PyG, RDKit, FastAPI)
+pip install --upgrade pip
+pip install torch==2.1.2 --extra-index-url https://download.pytorch.org/whl/cpu
+pip install torch-geometric rdkit-pypi fastapi uvicorn scikit-learn pandas numpy
+
+# 3. Start FastAPI server on port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### 3. Frontend Deployment (Next.js 14 & Tailwind CSS)
+```bash
+# 1. Navigate to frontend directory
+cd frontend
+
+# 2. Install Node dependencies
+npm install
+
+# 3. Build optimized production bundle & launch server
+npm run build
+npm run start -p 3000
+```
+
+### 4. Continuous Integration (CI/CD) Workflow
+The repository includes automated CI workflows under `.github/workflows/test_pipeline.yml` that run RDKit & PyTorch smoke tests on every push.
+
+---
+
 ## 📄 License
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
