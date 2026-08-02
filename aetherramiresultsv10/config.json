@@ -1,0 +1,912 @@
+{
+  "version": "AETHER-RAMI V10 OMEGA (upgraded from V9 ALPHA-TIER)",
+  "created": "2026-07-29 04:42:04",
+  "fast_dev_mode": false,
+  "generate_visualizations": true,
+  "device": "cuda",
+  "n_gpus": 2,
+  "amp": true,
+  "numpy": "2.0.2",
+  "esm2_model": "esm2_t12_35M_UR50D",
+  "esm2_dim": 480,
+  "pocket_radius_A": 10.0,
+  "egnn_layers": 4,
+  "primary_task": "BBBP",
+  "n_molecules": 1966,
+  "all_tasks": {
+    "BBB_Builtin": {
+      "n": 30,
+      "type": "cls",
+      "source": "builtin"
+    },
+    "BBBP": {
+      "n": 1966,
+      "type": "cls",
+      "source": "bbbp.zip"
+    },
+    "BACE": {
+      "n": 1513,
+      "type": "cls",
+      "source": "Bace_Descriptors.zip"
+    },
+    "ClinTox": {
+      "n": 1451,
+      "type": "cls",
+      "source": "Clintox_Descriptors.zip"
+    },
+    "HIV": {
+      "n": 3989,
+      "type": "cls",
+      "source": "hiv.zip"
+    },
+    "Tox21": {
+      "n": 3954,
+      "type": "cls",
+      "source": "tox21.zip"
+    },
+    "MUV": {
+      "n": 4000,
+      "type": "cls",
+      "source": "muv.csv.gz"
+    },
+    "ESOL": {
+      "n": 1116,
+      "type": "reg",
+      "source": "delaney-processed.zip"
+    },
+    "Lipophilicity": {
+      "n": 4000,
+      "type": "reg",
+      "source": "lipophilicity.zip"
+    },
+    "Auto_Tox21_tox21": {
+      "n": 3954,
+      "type": "cls",
+      "source": "tox21.csv"
+    },
+    "Auto_ESOL_delaney-processed": {
+      "n": 1116,
+      "type": "reg",
+      "source": "delaney-processed.csv"
+    },
+    "Auto_ESOL_SAMPL": {
+      "n": 639,
+      "type": "reg",
+      "source": "SAMPL.csv"
+    },
+    "Auto_ClinTox_clintox": {
+      "n": 1453,
+      "type": "cls",
+      "source": "clintox.csv"
+    },
+    "Auto_HIV_HIV": {
+      "n": 3989,
+      "type": "cls",
+      "source": "HIV.csv"
+    },
+    "Auto_MUV_muv": {
+      "n": 4000,
+      "type": "cls",
+      "source": "muv.csv"
+    },
+    "Auto_qm8": {
+      "n": 3997,
+      "type": "reg",
+      "source": "qm8.csv"
+    },
+    "Auto_BACE_bace": {
+      "n": 1513,
+      "type": "cls",
+      "source": "bace.csv"
+    },
+    "Auto_toxcast_data": {
+      "n": 3877,
+      "type": "cls",
+      "source": "toxcast_data.csv"
+    },
+    "Auto_QM9_qm9": {
+      "n": 3994,
+      "type": "reg",
+      "source": "qm9.csv"
+    },
+    "Auto_SIDER_sider": {
+      "n": 1386,
+      "type": "cls",
+      "source": "sider.csv"
+    },
+    "Auto_PubChem_Compound_020500001": {
+      "n": 3873,
+      "type": "cls",
+      "source": "Compound_020500001_021000000.sdf"
+    },
+    "Auto_PubChem_Compound_048000001": {
+      "n": 3992,
+      "type": "reg",
+      "source": "Compound_048000001_048500000.sdf"
+    },
+    "Auto_PubChem_Compound_013000001": {
+      "n": 3917,
+      "type": "reg",
+      "source": "Compound_013000001_013500000.sdf"
+    },
+    "Auto_PubChem_Compound_012000001": {
+      "n": 3905,
+      "type": "reg",
+      "source": "Compound_012000001_012500000.sdf"
+    },
+    "Auto_PubChem_Compound_019500001": {
+      "n": 4000,
+      "type": "cls",
+      "source": "Compound_019500001_020000000.sdf"
+    },
+    "Auto_PubChem_Compound_002500001": {
+      "n": 3998,
+      "type": "reg",
+      "source": "Compound_002500001_003000000.sdf"
+    },
+    "Auto_PubChem_Compound_008500001": {
+      "n": 3997,
+      "type": "reg",
+      "source": "Compound_008500001_009000000.sdf"
+    },
+    "Auto_PubChem_Compound_037000001": {
+      "n": 4000,
+      "type": "reg",
+      "source": "Compound_037000001_037500000.sdf"
+    }
+  },
+  "dti_datasets": {
+    "BindingDTA_Kd": {
+      "n": 436,
+      "type": "reg_dti"
+    },
+    "BindingDTA_Ki": {
+      "n": 2088,
+      "type": "reg_dti"
+    },
+    "BindingDTA_IC50": {
+      "n": 2855,
+      "type": "reg_dti"
+    }
+  },
+  "regression_results": {
+    "ESOL_measured log solubility in mols per litre": {
+      "rmse": 0.656231,
+      "r2": 0.910009,
+      "ci": 0.906
+    },
+    "Lipophilicity_exp": {
+      "rmse": 0.669853,
+      "r2": 0.697667,
+      "ci": 0.8219
+    },
+    "BindingDTA_Kd_pkd_transformed": {
+      "rmse": 1.046314,
+      "r2": 0.545518,
+      "ci": 0.8002
+    },
+    "BindingDTA_Ki_pkd_transformed": {
+      "rmse": 0.572279,
+      "r2": 0.823471,
+      "ci": 0.8761
+    },
+    "BindingDTA_IC50_pkd_transformed": {
+      "rmse": 0.672489,
+      "r2": 0.67478,
+      "ci": 0.8261
+    },
+    "Auto_ESOL_delaney-processed_ESOL predicted log solubility in mols per litre": {
+      "rmse": 0.330235,
+      "r2": 0.960028,
+      "ci": 0.9438
+    },
+    "Auto_ESOL_delaney-processed_Minimum Degree": {
+      "rmse": 0.18282,
+      "r2": 0.465061,
+      "ci": 0.94
+    },
+    "Auto_ESOL_SAMPL_expt": {
+      "rmse": 1.234059,
+      "r2": 0.874715,
+      "ci": 0.9264
+    },
+    "Auto_ESOL_SAMPL_calc": {
+      "rmse": 1.058613,
+      "r2": 0.93849,
+      "ci": 0.9396
+    },
+    "Auto_qm8_f1-PBE0": {
+      "rmse": 0.031186,
+      "r2": 0.212334,
+      "ci": 0.732
+    },
+    "Auto_qm8_f1-PBE0.1": {
+      "rmse": 0.031186,
+      "r2": 0.212334,
+      "ci": 0.732
+    }
+  },
+  "best_cls_model": "Random Forest",
+  "best_auc": 0.804285,
+  "benchmark": {
+    "Foundation EGNN": {
+      "ROC-AUC": 0.740591,
+      "F1": 0.692857,
+      "AP": 0.740591,
+      "MCC": 0.408591
+    },
+    "GIN (2D)": {
+      "ROC-AUC": 0.746188,
+      "F1": 0.684615,
+      "AP": 0.746188,
+      "MCC": 0.427032
+    },
+    "GATv2 (2D)": {
+      "ROC-AUC": 0.739095,
+      "F1": 0.666667,
+      "AP": 0.739095,
+      "MCC": 0.42541
+    },
+    "PL-CrossAttn (EGNN)": {
+      "ROC-AUC": 0.739143,
+      "F1": 0.689895,
+      "AP": 0.739143,
+      "MCC": 0.392876
+    },
+    "GNN Soft Ensemble": {
+      "ROC-AUC": 0.750097,
+      "F1": 0.678322,
+      "AP": 0.750097,
+      "MCC": 0.371201
+    },
+    "Random Forest": {
+      "ROC-AUC": 0.804285,
+      "F1": 0.707317,
+      "AP": 0.771529,
+      "MCC": 0.503883
+    },
+    "Extra Trees": {
+      "ROC-AUC": 0.797081,
+      "F1": 0.716981,
+      "AP": 0.764508,
+      "MCC": 0.486229
+    },
+    "LogReg": {
+      "ROC-AUC": 0.770543,
+      "F1": 0.685484,
+      "AP": 0.705532,
+      "MCC": 0.461899
+    },
+    "XGBoost": {
+      "ROC-AUC": 0.782859,
+      "F1": 0.720539,
+      "AP": 0.731401,
+      "MCC": 0.455477
+    },
+    "LightGBM": {
+      "ROC-AUC": 0.783324,
+      "F1": 0.717949,
+      "AP": 0.730202,
+      "MCC": 0.476433
+    },
+    "CatBoost": {
+      "ROC-AUC": 0.802519,
+      "F1": 0.731518,
+      "AP": 0.760523,
+      "MCC": 0.525194
+    },
+    "Soft Ensemble": {
+      "ROC-AUC": 0.797639,
+      "F1": 0.72973,
+      "AP": 0.763827,
+      "MCC": 0.474977
+    }
+  },
+  "protein_targets": {
+    "EGFR": {
+      "pdb_id": "1M17",
+      "class": "Kinase",
+      "n_residues": 312,
+      "pocket_residues": 23,
+      "synthetic": false,
+      "desirability": 0.1974,
+      "sa_score": 2.584,
+      "pains_flag": 0
+    },
+    "BRAF": {
+      "pdb_id": "1UWH",
+      "class": "Kinase",
+      "n_residues": 528,
+      "pocket_residues": 25,
+      "synthetic": false,
+      "desirability": 0.177,
+      "sa_score": 2.576,
+      "pains_flag": 0
+    },
+    "CDK2": {
+      "pdb_id": "1HCK",
+      "class": "Cell Cycle Kinase",
+      "n_residues": 294,
+      "pocket_residues": 27,
+      "synthetic": false,
+      "desirability": 0.1052,
+      "sa_score": 3.57,
+      "pains_flag": 0
+    },
+    "HIV_Protease": {
+      "pdb_id": "1HVR",
+      "class": "Viral Aspartyl Protease",
+      "n_residues": 196,
+      "pocket_residues": 24,
+      "synthetic": false,
+      "desirability": 0.1253,
+      "sa_score": 3.576,
+      "pains_flag": 0
+    },
+    "AChE": {
+      "pdb_id": "4EY7",
+      "class": "Neural Hydrolase",
+      "n_residues": 1065,
+      "pocket_residues": 26,
+      "synthetic": false,
+      "desirability": 0.1938,
+      "sa_score": 2.42,
+      "pains_flag": 0
+    }
+  },
+  "architecture": {
+    "ligand_encoders": "EGNN (3D, E(n)-equivariant) + [V10] GIN (2D) + [V10] GATv2 (2D, attention)",
+    "protein_encoder": "esm2_t12_35M_UR50D + AA-composition fallback",
+    "pocket_extraction": "10.0A radius Ca coordinates",
+    "generator": "Pocket-conditioned linear flow-matching (ODE Euler sampling)",
+    "scoring": "Bayesian MPO: BBB x QED x Lipinski x Physics x (1-clash), PAINS-penalized [V10]",
+    "active_learning": "BALD + predictive entropy + CoreSet (farthest-point)",
+    "explainability": "[V10] SHAP (TreeExplainer) + calibration curves + EGNN cross-attention maps",
+    "featurization": "Morgan/MACCS/FCFP/Topological-Torsion[/Mordred][/V10 Avalon] + RDKit descriptors + [V10] Lipinski/Veber/Ghose/Egan/Muegge + PAINS + SA-score",
+    "dataset_discovery": "[V10] universal /kaggle/input scan (CSV/TSV/JSON/SDF/MOL2/ZIP/GZ), auto SMILES+label detection, no hardcoded filenames"
+  },
+  "v10_additions": {
+    "avalon_fp": false,
+    "pains_catalog": true,
+    "sa_score_official": false,
+    "shap_computed": true,
+    "gin_trained": true,
+    "gatv2_trained": true,
+    "gnn_ensemble": true,
+    "auto_discovered_tasks": 19
+  },
+  "global_feature_importance": {
+    "Random Forest": [
+      {
+        "feature": "TPSA",
+        "importance": 0.0207
+      },
+      {
+        "feature": "MACCS_Bit_146",
+        "importance": 0.0163
+      },
+      {
+        "feature": "NumHBD",
+        "importance": 0.015
+      },
+      {
+        "feature": "LogP",
+        "importance": 0.014
+      },
+      {
+        "feature": "HBD+HBA",
+        "importance": 0.0139
+      }
+    ],
+    "Extra Trees": [
+      {
+        "feature": "MACCS_Bit_131",
+        "importance": 0.0145
+      },
+      {
+        "feature": "MACCS_Bit_146",
+        "importance": 0.0118
+      },
+      {
+        "feature": "MACCS_Bit_139",
+        "importance": 0.0109
+      },
+      {
+        "feature": "Feature_3790",
+        "importance": 0.0099
+      },
+      {
+        "feature": "Morgan_Bit_807",
+        "importance": 0.0098
+      }
+    ]
+  },
+  "wellplate_structural_diversity": 0.907,
+  "bootstrap_auc_ci": {
+    "Foundation EGNN": {
+      "lo95": 0.6812182276500823,
+      "mean": 0.7404488302894103,
+      "hi95": 0.7960488117901741
+    },
+    "GIN (2D)": {
+      "lo95": 0.6861720599590292,
+      "mean": 0.7460533261450375,
+      "hi95": 0.8002986304264244
+    },
+    "GATv2 (2D)": {
+      "lo95": 0.6796112545788029,
+      "mean": 0.7394158315627677,
+      "hi95": 0.797683199600082
+    },
+    "PL-CrossAttn (EGNN)": {
+      "lo95": 0.6841775850368471,
+      "mean": 0.7383367504967976,
+      "hi95": 0.7920718467973481
+    },
+    "GNN Soft Ensemble": {
+      "lo95": 0.6935930389712966,
+      "mean": 0.7498014431256947,
+      "hi95": 0.8052410347579125
+    },
+    "Random Forest": {
+      "lo95": 0.7530864556201161,
+      "mean": 0.8032424109995108,
+      "hi95": 0.8529554641073522
+    },
+    "Extra Trees": {
+      "lo95": 0.7456793790069053,
+      "mean": 0.7963949644843364,
+      "hi95": 0.8490253427489682
+    },
+    "LogReg": {
+      "lo95": 0.7177108072637118,
+      "mean": 0.7698928777265619,
+      "hi95": 0.8242918106189518
+    },
+    "XGBoost": {
+      "lo95": 0.7325126621309839,
+      "mean": 0.782145870316984,
+      "hi95": 0.834967994504577
+    },
+    "LightGBM": {
+      "lo95": 0.7305087923941402,
+      "mean": 0.7826984394723782,
+      "hi95": 0.8354495453421834
+    },
+    "CatBoost": {
+      "lo95": 0.7514952976962325,
+      "mean": 0.8015485838459556,
+      "hi95": 0.8542412364776167
+    },
+    "Soft Ensemble": {
+      "lo95": 0.7470522507666167,
+      "mean": 0.796770942014495,
+      "hi95": 0.8489480828395252
+    }
+  },
+  "pairwise_significance_tests": [
+    {
+      "model_a": "Random Forest",
+      "model_b": "CatBoost",
+      "paired_t_stat": 5.7145,
+      "paired_t_pvalue": 0.0,
+      "wilcoxon_stat": 14308.0,
+      "wilcoxon_pvalue": 0.0,
+      "delong_z": 0.2238,
+      "delong_pvalue": 0.8229,
+      "mcnemar_n01": 11,
+      "mcnemar_n10": 14,
+      "mcnemar_stat": 0.16,
+      "mcnemar_pvalue": 0.6892,
+      "note": "paired_t/wilcoxon: per-sample |pred-label| error comparison. delong: correct covariance-aware test for two correlated ROC-AUCs on the same test set. mcnemar: paired disagreement on thresholded predictions. p<0.05 in any test suggests the models are distinguishable by that criterion; p>=0.05 means not distinguishable at this sample size."
+    }
+  ],
+  "light_hpo": {
+    "ran": false,
+    "best_params": null,
+    "best_val_auc": null
+  },
+  "denovo_lead_optimizer": {
+    "ran": true,
+    "n_targets_with_derivatives": 5,
+    "total_derivatives": 185,
+    "top_derivative_binding_scores": {
+      "EGFR": {
+        "smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCC(F)CN1CCOCC1",
+        "modification": "Fluorination (blocks metabolic oxidation)",
+        "binding_probability": 0.7055,
+        "desirability": 0.704
+      },
+      "BRAF": {
+        "smiles": "CNC(=O)c1cc(Oc2ccc(NC(=O)Nc3ccc(F)c(C(F)(F)F)c3)cc2)ccn1",
+        "modification": "Chlorine-to-fluorine bioisosteric swap",
+        "binding_probability": 0.5593,
+        "desirability": 0.6218
+      },
+      "CDK2": {
+        "smiles": "Nc1ncnc2c1ncn2[C@]1(F)O[C@H](COP(=O)(O)OP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@H]1O",
+        "modification": "Fluorination (blocks metabolic oxidation)",
+        "binding_probability": 0.2842,
+        "desirability": 0.372
+      },
+      "HIV_Protease": {
+        "smiles": "CC(C)Cc1ccc(CC(NC(=O)c2ccc3oc(=O)cc(F)c3c2)C(O)Cn2cc(C(=O)NC(CC(=O)O)CC(C)C)nn2)cc1",
+        "modification": "Fluorination (blocks metabolic oxidation)",
+        "binding_probability": 0.4573,
+        "desirability": 0.4627
+      },
+      "AChE": {
+        "smiles": "CCN(C)[C@@H]1CC[C@]2(O)CCc3cc(OC)ccc3C2(F)C1",
+        "modification": "Fluorination (blocks metabolic oxidation)",
+        "binding_probability": 0.5912,
+        "desirability": 0.7525
+      }
+    },
+    "hazard_filter_applied": true
+  },
+  "docking": {
+    "ran": false,
+    "dependencies_available": null,
+    "n_targets_docked": 0,
+    "results": {}
+  },
+  "dti_baselines": {
+    "ran": false,
+    "results": {},
+    "note": "Compact reproductions of DeepDTA/GraphDTA core architectural ideas, trained only on DTI tasks where a real per-row protein sequence column was found (see DTI_PROTEIN_COLS) \u2014 not hyperparameter-matched replications."
+  },
+  "denovo_iterative_refinement": {
+    "ran": true,
+    "n_rounds_configured": 3,
+    "results_by_target": {
+      "EGFR": {
+        "best": {
+          "smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCC(F)CN1CCOCC1",
+          "model_used": "EGNN-CrossAttn",
+          "bbb_probability": 0.7053,
+          "MolWt": 464.9,
+          "LogP": 4.22,
+          "TPSA": 68.74,
+          "NumHDonors": 1,
+          "NumHAcceptors": 7,
+          "NumRotBonds": 8,
+          "qed_score": 0.5349,
+          "FSP3": 0.364,
+          "NumRings": 4,
+          "NumAromRings": 3,
+          "NumHeavyAtoms": 32,
+          "lipinski_violations": 0,
+          "drug_likeness": 1.0,
+          "veber_pass": 1,
+          "ghose_pass": 1,
+          "egan_pass": 1,
+          "muegge_pass": 1,
+          "pains_flag": 0,
+          "sa_score": 2.854,
+          "tice_agro_pass": 1,
+          "hazard_any": 0,
+          "covalent_warhead_any": 0,
+          "structural_alert_hits": [
+            "cyp_aniline"
+          ],
+          "green_chem_proxy": 4.347,
+          "cyp_liability_any": 1,
+          "cyp_liability_hits": [
+            "cyp_aniline"
+          ],
+          "molecular_complexity_index": 1082.47,
+          "promiscuity_risk_proxy": 0.736,
+          "toxicity_flags": [],
+          "toxicity_flag": 0,
+          "admet_score": 0.7341,
+          "physics_score": 0.5,
+          "clash_penalty": 0.0,
+          "modification": "Fluorination (blocks metabolic oxidation)",
+          "desirability": 0.704,
+          "round": 1
+        },
+        "history": [
+          {
+            "round": 1,
+            "n_candidates": 40,
+            "best_desirability": 0.704,
+            "best_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCC(F)CN1CCOCC1"
+          },
+          {
+            "round": 2,
+            "n_candidates": 117,
+            "best_desirability": 0.7017,
+            "best_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCC(F)CN1CCOC(F)C1"
+          },
+          {
+            "round": 3,
+            "n_candidates": 118,
+            "best_desirability": 0.694,
+            "best_smiles": "COc1c(OCC(F)CN2CCOC(F)C2)cc2c(Nc3ccc(F)c(Cl)c3)ncnc2c1O"
+          }
+        ],
+        "converged_without_improvement": true
+      },
+      "BRAF": {
+        "best": {
+          "smiles": "CNC(=O)c1cc(Oc2ccc(NC(=O)Nc3ccc(F)c(C(F)(F)F)c3)cc2F)c(N)cn1",
+          "model_used": "EGNN-CrossAttn",
+          "bbb_probability": 0.6008,
+          "MolWt": 481.38,
+          "LogP": 4.76,
+          "TPSA": 118.37,
+          "NumHDonors": 4,
+          "NumHAcceptors": 5,
+          "NumRotBonds": 5,
+          "qed_score": 0.3923,
+          "FSP3": 0.095,
+          "NumRings": 3,
+          "NumAromRings": 3,
+          "NumHeavyAtoms": 34,
+          "lipinski_violations": 0,
+          "drug_likeness": 1.0,
+          "veber_pass": 1,
+          "ghose_pass": 0,
+          "egan_pass": 1,
+          "muegge_pass": 1,
+          "pains_flag": 0,
+          "sa_score": 2.616,
+          "tice_agro_pass": 0,
+          "hazard_any": 0,
+          "covalent_warhead_any": 0,
+          "structural_alert_hits": [
+            "cyp_pyridine_heme"
+          ],
+          "green_chem_proxy": 5.471,
+          "cyp_liability_any": 1,
+          "cyp_liability_hits": [
+            "cyp_pyridine_heme"
+          ],
+          "molecular_complexity_index": 1249.95,
+          "promiscuity_risk_proxy": 0.669,
+          "toxicity_flags": [],
+          "toxicity_flag": 0,
+          "admet_score": 0.6476,
+          "physics_score": 0.5,
+          "clash_penalty": 0.0,
+          "modification": "Fluorination (blocks metabolic oxidation)",
+          "desirability": 0.6356,
+          "round": 3
+        },
+        "history": [
+          {
+            "round": 1,
+            "n_candidates": 37,
+            "best_desirability": 0.6218,
+            "best_smiles": "CNC(=O)c1cc(Oc2ccc(NC(=O)Nc3ccc(F)c(C(F)(F)F)c3)cc2)ccn1"
+          },
+          {
+            "round": 2,
+            "n_candidates": 104,
+            "best_desirability": 0.6328,
+            "best_smiles": "CNC(=O)c1cc(Oc2ccc(NC(=O)Nc3ccc(F)c(C(F)(F)F)c3)cc2)c(N)cn1"
+          },
+          {
+            "round": 3,
+            "n_candidates": 94,
+            "best_desirability": 0.6356,
+            "best_smiles": "CNC(=O)c1cc(Oc2ccc(NC(=O)Nc3ccc(F)c(C(F)(F)F)c3)cc2F)c(N)cn1"
+          }
+        ],
+        "converged_without_improvement": false
+      },
+      "CDK2": {
+        "best": {
+          "smiles": "Cc1nc2c(N)ncnc2n1[C@@H]1O[C@](F)(COP(=O)(O)OP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@@]1(C)O",
+          "model_used": "EGNN-CrossAttn",
+          "bbb_probability": 0.3171,
+          "MolWt": 553.23,
+          "LogP": -0.63,
+          "TPSA": 279.13,
+          "NumHDonors": 7,
+          "NumHAcceptors": 13,
+          "NumRotBonds": 8,
+          "qed_score": 0.2002,
+          "FSP3": 0.583,
+          "NumRings": 3,
+          "NumAromRings": 2,
+          "NumHeavyAtoms": 34,
+          "lipinski_violations": 3,
+          "drug_likeness": 0.25,
+          "veber_pass": 0,
+          "ghose_pass": 0,
+          "egan_pass": 0,
+          "muegge_pass": 0,
+          "pains_flag": 0,
+          "sa_score": 3.53,
+          "tice_agro_pass": 0,
+          "hazard_any": 0,
+          "covalent_warhead_any": 0,
+          "structural_alert_hits": [],
+          "green_chem_proxy": 3.875,
+          "cyp_liability_any": 0,
+          "cyp_liability_hits": [],
+          "molecular_complexity_index": 1251.58,
+          "promiscuity_risk_proxy": 0.872,
+          "toxicity_flags": [],
+          "toxicity_flag": 0,
+          "admet_score": 0.3311,
+          "physics_score": 0.5,
+          "clash_penalty": 0.0,
+          "modification": "Methylation (fills hydrophobic pocket)",
+          "desirability": 0.3847,
+          "round": 3
+        },
+        "history": [
+          {
+            "round": 1,
+            "n_candidates": 28,
+            "best_desirability": 0.372,
+            "best_smiles": "Nc1ncnc2c1ncn2[C@]1(F)O[C@H](COP(=O)(O)OP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@H]1O"
+          },
+          {
+            "round": 2,
+            "n_candidates": 69,
+            "best_desirability": 0.3829,
+            "best_smiles": "Cc1nc2c(N)ncnc2n1[C@@H]1O[C@](F)(COP(=O)(O)OP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@H]1O"
+          },
+          {
+            "round": 3,
+            "n_candidates": 71,
+            "best_desirability": 0.3847,
+            "best_smiles": "Cc1nc2c(N)ncnc2n1[C@@H]1O[C@](F)(COP(=O)(O)OP(=O)(O)OP(=O)(O)O)[C@@H](O)[C@@]1(C)O"
+          }
+        ],
+        "converged_without_improvement": false
+      },
+      "HIV_Protease": {
+        "best": {
+          "smiles": "CC(C)Cc1ccc(CC(NC(=O)c2cc(F)c3oc(=O)ccc3c2)C(O)Cn2cc(C(=O)NC(CC(=O)O)C(F)C(C)C)nn2)cc1",
+          "model_used": "EGNN-CrossAttn",
+          "bbb_probability": 0.4644,
+          "MolWt": 667.71,
+          "LogP": 3.69,
+          "TPSA": 176.65,
+          "NumHDonors": 4,
+          "NumHAcceptors": 8,
+          "NumRotBonds": 15,
+          "qed_score": 0.1378,
+          "FSP3": 0.412,
+          "NumRings": 4,
+          "NumAromRings": 4,
+          "NumHeavyAtoms": 48,
+          "lipinski_violations": 1,
+          "drug_likeness": 0.75,
+          "veber_pass": 0,
+          "ghose_pass": 0,
+          "egan_pass": 0,
+          "muegge_pass": 0,
+          "pains_flag": 0,
+          "sa_score": 3.866,
+          "tice_agro_pass": 0,
+          "hazard_any": 0,
+          "covalent_warhead_any": 0,
+          "structural_alert_hits": [],
+          "green_chem_proxy": 3.746,
+          "cyp_liability_any": 0,
+          "cyp_liability_hits": [],
+          "molecular_complexity_index": 1805.66,
+          "promiscuity_risk_proxy": 0.533,
+          "toxicity_flags": [],
+          "toxicity_flag": 0,
+          "admet_score": 0.4608,
+          "physics_score": 0.5,
+          "clash_penalty": 0.0,
+          "modification": "Fluorination (blocks metabolic oxidation)",
+          "desirability": 0.463,
+          "round": 2
+        },
+        "history": [
+          {
+            "round": 1,
+            "n_candidates": 40,
+            "best_desirability": 0.4627,
+            "best_smiles": "CC(C)Cc1ccc(CC(NC(=O)c2ccc3oc(=O)cc(F)c3c2)C(O)Cn2cc(C(=O)NC(CC(=O)O)CC(C)C)nn2)cc1"
+          },
+          {
+            "round": 2,
+            "n_candidates": 117,
+            "best_desirability": 0.463,
+            "best_smiles": "CC(C)Cc1ccc(CC(NC(=O)c2cc(F)c3oc(=O)ccc3c2)C(O)Cn2cc(C(=O)NC(CC(=O)O)C(F)C(C)C)nn2)cc1"
+          },
+          {
+            "round": 3,
+            "n_candidates": 118,
+            "best_desirability": 0.4624,
+            "best_smiles": "CC(C)CC(CC(=O)O)NC(=O)c1cn(CC(O)C(Cc2ccc(CC(C)(C)F)cc2)NC(=O)c2cc(F)c3oc(=O)cc(F)c3c2)nn1"
+          }
+        ],
+        "converged_without_improvement": true
+      },
+      "AChE": {
+        "best": {
+          "smiles": "CCN(C)[C@H]1CC2(F)c3ccc(OCF)cc3CC[C@@]2(O)CC1F",
+          "model_used": "EGNN-CrossAttn",
+          "bbb_probability": 0.6779,
+          "MolWt": 343.39,
+          "LogP": 3.29,
+          "TPSA": 32.7,
+          "NumHDonors": 1,
+          "NumHAcceptors": 3,
+          "NumRotBonds": 4,
+          "qed_score": 0.9106,
+          "FSP3": 0.667,
+          "NumRings": 3,
+          "NumAromRings": 1,
+          "NumHeavyAtoms": 24,
+          "lipinski_violations": 0,
+          "drug_likeness": 1.0,
+          "veber_pass": 1,
+          "ghose_pass": 1,
+          "egan_pass": 1,
+          "muegge_pass": 1,
+          "pains_flag": 0,
+          "sa_score": 2.73,
+          "tice_agro_pass": 1,
+          "hazard_any": 0,
+          "covalent_warhead_any": 0,
+          "structural_alert_hits": [],
+          "green_chem_proxy": 3.617,
+          "cyp_liability_any": 0,
+          "cyp_liability_hits": [],
+          "molecular_complexity_index": 613.93,
+          "promiscuity_risk_proxy": 0.971,
+          "toxicity_flags": [],
+          "toxicity_flag": 0,
+          "admet_score": 0.856,
+          "physics_score": 0.5,
+          "clash_penalty": 0.0,
+          "modification": "Fluorination (blocks metabolic oxidation)",
+          "desirability": 0.7753,
+          "round": 3
+        },
+        "history": [
+          {
+            "round": 1,
+            "n_candidates": 40,
+            "best_desirability": 0.7525,
+            "best_smiles": "CCN(C)[C@@H]1CC[C@]2(O)CCc3cc(OC)ccc3C2(F)C1"
+          },
+          {
+            "round": 2,
+            "n_candidates": 117,
+            "best_desirability": 0.7726,
+            "best_smiles": "CCN(C)[C@@H]1CC[C@]2(O)CCc3cc(OCF)ccc3C2(F)C1"
+          },
+          {
+            "round": 3,
+            "n_candidates": 117,
+            "best_desirability": 0.7753,
+            "best_smiles": "CCN(C)[C@H]1CC2(F)c3ccc(OCF)cc3CC[C@@]2(O)CC1F"
+          }
+        ],
+        "converged_without_improvement": false
+      }
+    },
+    "note": "Rule-based, score-guided hill-climbing over bioisosteric mutation rounds \u2014 NOT an LLM-based generation-with-feedback method."
+  },
+  "rna_module": {
+    "ran": true,
+    "n_targets": 3,
+    "n_structures_parsed": 3,
+    "n_ligands_resolved_via_pubchem": 0,
+    "docking_results": {},
+    "note": "Real PDB structures + PubChem-resolved ligands (fetched by name at runtime, not hardcoded) + real Vina docking where enabled. No trained RNA-affinity model is fabricated without real labeled training data."
+  },
+  "gene_expression_connectivity": {
+    "ran": false,
+    "signature_path": null,
+    "n_compounds_scored": 0,
+    "note": "Real Connectivity-Map-style cosine-similarity scoring \u2014 only runs against a real, explicitly user-supplied compound x gene expression file."
+  },
+  "reaction_extraction": {
+    "ran": false,
+    "n_rules_extracted": 0,
+    "note": "Regex + RDKit-validated pattern extraction \u2014 explicitly NOT an LLM-based literature extraction method."
+  }
+}

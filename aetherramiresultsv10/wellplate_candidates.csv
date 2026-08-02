@@ -1,0 +1,14 @@
+Well,Row,Column,Type,SMILES,ID,Source
+A01,A,1,POSITIVE_CONTROL,CONTROL_BUFFER,CONTROL,
+A02,A,2,SAMPLE,CN[C@H]1CC[C@@H](c2ccc(Cl)c(Cl)c2)c2ccccc21,BALD_01,BALD
+A03,A,3,SAMPLE,C=C[C@H]1CN2CC[C@H]1C[C@@H]2[C@@H](O)c1ccnc2ccc(OC)cc12,BALD_02,BALD
+A04,A,4,SAMPLE,CCC(C)C(N)C1=NC(C(=O)N[C@@H](CC(C)C)C(=O)N[C@H](CCC(=O)O)C(=O)N[C@H](C(=O)NCCCC[C@@H]2NC(=O)[C@H](CC(N)=O)NC(=O)[C@@H](CC(=O)O)NC(=O)[C@H](Cc3cnc[nH]3)NC(=O)[C@@H](Cc3ccccc3)NC(=O)[C@H]([C@@H](C)CC)NC(=O)[C@@H](CCCN)NC2=O)[C@@H](C)CC)CS1,BALD_03,BALD
+A05,A,5,SAMPLE,OC(CCN1CCCC1)(c1ccccc1)C1CCCCC1,BALD_04,BALD
+A06,A,6,SAMPLE,Cc1c(O)cccc1C(=O)N[C@@H](CSc1ccccc1)[C@H](O)CN1C[C@H]2CCCC[C@H]2C[C@H]1C(=O)NC(C)(C)C,BALD_05,BALD
+A07,A,7,SAMPLE,Nc1ccc(-c2nc3ccc(O)cc3s2)cc1I,Entropy_01,Entropy
+A08,A,8,SAMPLE,CN1Cc2c(C(=O)OC(C)(C)C)ncn2-c2ccsc2C1=O,Entropy_03,Entropy
+A09,A,9,SAMPLE,CCN1CCN(C(=O)N[C@@H](C(=O)N[C@@H]2C(=O)N3C(C(=O)O)=C(CSc4nnnn4C)CS[C@H]23)c2ccc(O)cc2)C(=O)C1=O,CoreSet_01,CoreSet
+A10,A,10,SAMPLE,CC1CCCC1,CoreSet_02,CoreSet
+A11,A,11,SAMPLE,CC/C(=C(\c1ccccc1)c1ccc(OCCN(C)C)cc1)c1ccccc1,CoreSet_03,CoreSet
+A12,A,12,SAMPLE,O=c1[nH]cc(F)c(=O)[nH]1,CoreSet_04,CoreSet
+B01,B,1,SAMPLE,OC(Cn1cncn1)(Cn1cncn1)c1ccc(F)cc1F,CoreSet_05,CoreSet
