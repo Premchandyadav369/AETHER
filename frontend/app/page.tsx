@@ -12,13 +12,16 @@ import QuantumPharmaLab from './components/QuantumPharmaLab';
 import DeNovoGenerator from './components/DeNovoGenerator';
 import ProteinExplorer from './components/ProteinExplorer';
 import DockingStudio from './components/DockingStudio';
+import Interactive3DBindingStudio from './components/Interactive3DBindingStudio';
 import DynamicsDashboard from './components/DynamicsDashboard';
 import ModelZoo from './components/ModelZoo';
+import DeNovoLeadExplorer from './components/DeNovoLeadExplorer';
 import DatasetManager from './components/DatasetManager';
 import CandidateRanking from './components/CandidateRanking';
 import ChemicalSpaceExplorer from './components/ChemicalSpaceExplorer';
 import AdmetCenter from './components/AdmetCenter';
 import ExplainabilityCenter from './components/ExplainabilityCenter';
+import ScientificPublicationStudio from './components/ScientificPublicationStudio';
 import ReportGenerator from './components/ReportGenerator';
 import ExperimentManager from './components/ExperimentManager';
 import SettingsPage from './components/SettingsPage';
@@ -99,15 +102,15 @@ export default function MainPage() {
       {activeTab === 'quantum' && <QuantumPharmaLab />}
       {activeTab === 'generator' && <DeNovoGenerator />}
       {activeTab === 'proteins' && <ProteinExplorer />}
-      {activeTab === 'docking' && <DockingStudio />}
+      {activeTab === 'docking' && <Interactive3DBindingStudio />}
       {activeTab === 'dynamics' && <DynamicsDashboard />}
       {activeTab === 'models' && <ModelZoo />}
-      {activeTab === 'datasets' && <DatasetManager />}
+      {activeTab === 'datasets' && <DeNovoLeadExplorer />}
       {activeTab === 'ranking' && <CandidateRanking />}
       {activeTab === 'chemspace' && <ChemicalSpaceExplorer />}
       {activeTab === 'admet' && <AdmetCenter />}
       {activeTab === 'explain' && <ExplainabilityCenter />}
-      {activeTab === 'report' && <ReportGenerator />}
+      {activeTab === 'report' && <ScientificPublicationStudio />}
       {activeTab === 'experiments' && <ExperimentManager />}
       {activeTab === 'settings' && <SettingsPage />}
 
