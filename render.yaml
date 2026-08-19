@@ -1,0 +1,55 @@
+# ==============================================================================
+# AETHER AI DRUG DISCOVERY PLATFORM - RENDER BLUEPRINT SPECIFICATION
+# ==============================================================================
+# Declarative Infrastructure as Code (IaC) for 1-Click Multi-Service Deployment
+# Deploy Backend (FastAPI + AI Services) and Frontend (Next.js 14 Webstation)
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. AETHER FASTAPI BACKEND SERVICE
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: aether-backend
+    runtime: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
+    startCommand: "python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1"
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: PORT
+        value: 8000
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: AETHER_WORKSPACE
+        value: "."
+
+  # ----------------------------------------------------------------------------
+  # 2. AETHER NEXT.JS WORKSTATION FRONTEND
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: aether-frontend
+    runtime: node
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: "cd frontend && npm install && npm run build"
+    startCommand: "cd frontend && npm run start"
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: NEXT_PUBLIC_BACKEND_URL
+        fromService:
+          type: web
+          name: aether-backend
+          property: host
+          # Render automatically prepends https:// to host

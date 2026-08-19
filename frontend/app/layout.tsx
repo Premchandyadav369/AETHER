@@ -3,7 +3,7 @@
 import React from 'react';
 import {
   Activity, Zap, FlaskConical, Microscope, Layers, Cpu, Database, ShieldCheck,
-  BarChart3, Heart, FileText, Settings, Bot, Sparkles, Command
+  BarChart3, Heart, FileText, Settings, Bot, Sparkles, Command, Dna, Globe2, Atom
 } from 'lucide-react';
 import { GeistSans } from 'geist/font/sans';
 import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
@@ -28,7 +28,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 const SIDEBAR_ITEMS: { key: SectionTab; label: string; desc: string; icon: any }[] = [
   { key: 'executive', label: 'Executive Dashboard', desc: 'System & GPU Health', icon: Activity },
   { key: 'workspace', label: 'Discovery Pipeline', desc: '8-Stage Workflow', icon: Zap },
-  { key: 'generator', label: 'De Novo Generator', desc: 'SMILES & SELFIES VAE', icon: FlaskConical },
+  { key: 'precision', label: 'Precision Medicine', desc: 'Mutations & Resistance', icon: Dna },
+  { key: 'digitaltwin', label: 'Digital Human Twin', desc: 'PBPK PK/PD Dynamics', icon: Heart },
+  { key: 'medchemist', label: 'AI Medicinal Chemist', desc: 'SAR & Bioisosteres', icon: FlaskConical },
+  { key: 'intelligence', label: 'Global Intelligence', desc: 'PubChem & Trials Graph', icon: Globe2 },
+  { key: 'quantum', label: 'Quantum & Synthesis', desc: 'DFT Orbitals & SAS', icon: Atom },
+  { key: 'generator', label: 'De Novo Generator', desc: 'SMILES & SELFIES VAE', icon: Sparkles },
   { key: 'proteins', label: 'Protein Explorer', desc: 'PDB 3D & Pocket Detection', icon: Microscope },
   { key: 'docking', label: 'Docking Studio', desc: 'Vina / GNINA / DiffDock', icon: Layers },
   { key: 'dynamics', label: 'Molecular Dynamics', desc: 'RMSD & OpenMM Trajectory', icon: Activity },

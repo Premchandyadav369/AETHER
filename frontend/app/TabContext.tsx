@@ -5,6 +5,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 export type SectionTab = 
   | 'executive'
   | 'workspace'
+  | 'precision'
+  | 'digitaltwin'
+  | 'medchemist'
+  | 'intelligence'
+  | 'quantum'
   | 'generator'
   | 'proteins'
   | 'docking'

@@ -10,8 +10,15 @@ try:
 except ImportError:
     RDKIT_AVAILABLE = False
 
-WORKSPACE = r"c:\Users\PREMCHANDYADAV\OneDrive\Desktop\Project\AETHERRAMI"
-V9_DIR = os.path.join(WORKSPACE, "aether-ramiv9")
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = CURRENT_DIR.parent
+PROJECT_ROOT = BACKEND_DIR.parent
+
+WORKSPACE = os.getenv("AETHER_WORKSPACE", str(PROJECT_ROOT))
+V9_DIR = os.getenv("AETHER_V9_DIR", str(PROJECT_ROOT / "aether-ramiv9"))
+V10_DIR = os.getenv("AETHER_RESULTS_DIR", str(PROJECT_ROOT / "aetherramiresultsv10"))
 
 class VectorSearchService:
     def __init__(self):

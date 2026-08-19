@@ -4,6 +4,11 @@ import React from 'react';
 import { useTab, SectionTab } from './TabContext';
 import ExecutiveDashboard from './components/ExecutiveDashboard';
 import PipelineWorkspace from './components/PipelineWorkspace';
+import PrecisionMedicineLab from './components/PrecisionMedicineLab';
+import DigitalTwinSimulator from './components/DigitalTwinSimulator';
+import MedicinalChemistStudio from './components/MedicinalChemistStudio';
+import GlobalIntelligenceCenter from './components/GlobalIntelligenceCenter';
+import QuantumPharmaLab from './components/QuantumPharmaLab';
 import DeNovoGenerator from './components/DeNovoGenerator';
 import ProteinExplorer from './components/ProteinExplorer';
 import DockingStudio from './components/DockingStudio';
@@ -87,6 +92,11 @@ export default function MainPage() {
       {/* Render Active Workstation Module */}
       {activeTab === 'executive' && <ExecutiveDashboard />}
       {activeTab === 'workspace' && <PipelineWorkspace />}
+      {activeTab === 'precision' && <PrecisionMedicineLab />}
+      {activeTab === 'digitaltwin' && <DigitalTwinSimulator />}
+      {activeTab === 'medchemist' && <MedicinalChemistStudio />}
+      {activeTab === 'intelligence' && <GlobalIntelligenceCenter />}
+      {activeTab === 'quantum' && <QuantumPharmaLab />}
       {activeTab === 'generator' && <DeNovoGenerator />}
       {activeTab === 'proteins' && <ProteinExplorer />}
       {activeTab === 'docking' && <DockingStudio />}

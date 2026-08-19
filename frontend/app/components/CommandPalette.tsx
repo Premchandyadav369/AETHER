@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Command, X, ArrowRight, ShieldCheck, Zap, Microscope, Activity, Heart, Cpu, FileText, Settings, Database, FlaskConical, Layers, BarChart3, Bot } from 'lucide-react';
+import { Search, Command, X, ArrowRight, ShieldCheck, Zap, Microscope, Activity, Heart, Cpu, FileText, Settings, Database, FlaskConical, Layers, BarChart3, Bot, Dna, Globe2, Atom } from 'lucide-react';
 import { useTab, SectionTab } from '../TabContext';
 
 interface PaletteItem {
@@ -22,6 +22,11 @@ export default function CommandPalette() {
   const items: PaletteItem[] = [
     { id: '1', title: 'Executive Dashboard & System Metrics', category: 'Module', tab: 'executive', icon: Activity },
     { id: '2', title: 'Drug Discovery Pipeline Workspace', category: 'Module', tab: 'workspace', icon: Zap },
+    { id: 'precision', title: 'Precision Medicine & Mutation Escape Lab', category: 'Genomics', tab: 'precision', icon: Dna },
+    { id: 'twin', title: 'Digital Human Twin & PBPK PK/PD Dynamics', category: 'Simulation', tab: 'digitaltwin', icon: Heart },
+    { id: 'chemist', title: 'AI Medicinal Chemist & SAR Bioisosteres', category: 'Optimization', tab: 'medchemist', icon: FlaskConical },
+    { id: 'intel', title: 'Global Intelligence & Disease Knowledge Graph', category: 'Intelligence', tab: 'intelligence', icon: Globe2 },
+    { id: 'quantum', title: 'Quantum Molecular Mechanics & Synthesis SAS', category: 'Quantum', tab: 'quantum', icon: Atom },
     { id: '3', title: 'De Novo Molecule Generator (SMILES/SELFIES)', category: 'Module', tab: 'generator', icon: FlaskConical },
     { id: '4', title: 'Protein Structure Explorer & PDB Viewer', category: 'Module', tab: 'proteins', icon: Microscope },
     { id: '5', title: 'Docking Studio (Vina / GNINA / DiffDock)', category: 'Module', tab: 'docking', icon: Layers },

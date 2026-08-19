@@ -1,5 +1,6 @@
 fastapi>=0.110.0
-uvicorn>=0.28.0
+uvicorn[standard]>=0.28.0
+gunicorn>=21.2.0
 pydantic>=2.0
 torch>=2.0.0
 numpy>=1.24.0,<2.0.0
@@ -8,4 +9,8 @@ pandas>=2.0.0
 faiss-cpu>=1.7.4
 python-multipart>=0.0.9
 python-dotenv>=1.0.0
+requests>=2.31.0
+xgboost>=2.0.0
+lightgbm>=4.0.0
 rdkit-pypi>=2022.9.5
+
