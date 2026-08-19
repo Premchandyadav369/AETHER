@@ -4,6 +4,7 @@ from typing import List, Optional, Dict, Any
 from backend.services.inference import inference_service
 from backend.services.vector_search import vector_search_service
 from backend.services.research_engine import research_engine
+from backend.services.cheminformatics_engine import cheminformatics_engine
 
 router = APIRouter()
 
@@ -331,4 +332,33 @@ async def get_curated_leads(target: Optional[str] = Query(None, description="Tar
 @router.get("/datasets/drug-rules", summary="Query medicinal chemistry rule summary metrics")
 async def get_drug_rules_summary():
     return inference_service.get_drug_rules()
+
+# Real RDKit Cheminformatics & Biophysics Endpoints
+class ChemAnalyzeRequest(BaseModel):
+    smiles: str = Field(..., example="COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCC(F)CN1CCOCC1")
+    target_protein: Optional[str] = Field("EGFR", example="EGFR")
+
+@router.post("/chem/analyze", summary="Compute exact RDKit 2D/3D profile, SVG, and drug filters")
+async def analyze_chemical_structure(req: ChemAnalyzeRequest):
+    return cheminformatics_engine.parse_molecule(req.smiles, req.target_protein or "EGFR")
+
+@router.post("/chem/interaction-map", summary="Compute explicit 3D protein-ligand contact distances and types")
+async def compute_interaction_map(req: ChemAnalyzeRequest):
+    contacts = cheminformatics_engine.compute_protein_contacts(req.smiles, req.target_protein or "EGFR")
+    return {
+        "smiles": req.smiles,
+        "target_protein": req.target_protein or "EGFR",
+        "contacts_count": len(contacts),
+        "contacts": contacts
+    }
+
+@router.post("/chem/retrosynthesis", summary="Generate multi-step organic retrosynthetic reaction pathway")
+async def compute_retrosynthesis(req: ChemAnalyzeRequest):
+    route = cheminformatics_engine.compute_retrosynthetic_route(req.smiles, req.target_protein or "EGFR")
+    return {
+        "target_molecule_smiles": req.smiles,
+        "total_steps": len(route),
+        "synthetic_route": route
+    }
+
 
