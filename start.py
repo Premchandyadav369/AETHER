@@ -12,11 +12,18 @@ import urllib.request
 import json
 from pathlib import Path
 
+# Ensure UTF-8 output on all operating systems
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except AttributeError:
+        pass
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 print("=" * 70)
-print("  🚀 LAUNCHING AETHER AI DRUG DISCOVERY PLATFORM")
+print("  [*] LAUNCHING AETHER AI DRUG DISCOVERY PLATFORM")
 print("=" * 70)
 
 # 1. Start Backend Process
@@ -44,7 +51,7 @@ for attempt in range(15):
         with urllib.request.urlopen(req, timeout=2) as res:
             if res.status == 200:
                 data = json.loads(res.read().decode())
-                print(f"  ✓ FastAPI Backend Online: {data}")
+                print(f"  [+] FastAPI Backend Online: {data}")
                 backend_ready = True
                 break
     except Exception:
@@ -64,16 +71,16 @@ for ep in test_endpoints:
         url = f"http://127.0.0.1:8000{ep}"
         req = urllib.request.Request(url)
         with urllib.request.urlopen(req, timeout=3) as res:
-            print(f"  ✓ Endpoint {ep:25} -> Status {res.status} OK")
+            print(f"  [+] Endpoint {ep:25} -> Status {res.status} OK")
     except Exception as e:
-        print(f"  ✗ Endpoint {ep:25} -> {e}")
+        print(f"  [x] Endpoint {ep:25} -> {e}")
 
 print("\n" + "=" * 70)
-print("  🌟 AETHER PLATFORM SERVICES READY")
+print("  [*] AETHER PLATFORM SERVICES READY")
 print("=" * 70)
-print("  ► Frontend URL:       http://localhost:3000")
-print("  ► Backend API:        http://127.0.0.1:8000")
-print("  ► Interactive Docs:   http://127.0.0.1:8000/docs")
+print("  * Frontend URL:       http://localhost:3000")
+print("  * Backend API:        http://127.0.0.1:8000")
+print("  * Interactive Docs:   http://127.0.0.1:8000/docs")
 print("=" * 70)
 
 # Keep running or exit cleanly
@@ -85,4 +92,5 @@ print("=" * 70)
 
 # Terminate backend process for the test run
 backend_proc.terminate()
-print("\n[✓] Single-run verification completed successfully.")
+print("\n[+] Single-run verification completed successfully.")
+
