@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTab, SectionTab } from './TabContext';
+import BeginnerGuideHub from './components/BeginnerGuideHub';
 import ExecutiveDashboard from './components/ExecutiveDashboard';
 import PipelineWorkspace from './components/PipelineWorkspace';
 import PrecisionMedicineLab from './components/PrecisionMedicineLab';
@@ -93,6 +94,7 @@ export default function MainPage() {
       )}
 
       {/* Render Active Workstation Module */}
+      {activeTab === 'beginner' && <BeginnerGuideHub />}
       {activeTab === 'executive' && <ExecutiveDashboard />}
       {activeTab === 'workspace' && <PipelineWorkspace />}
       {activeTab === 'precision' && <PrecisionMedicineLab />}
