@@ -26,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 const SIDEBAR_ITEMS: { key: SectionTab; label: string; desc: string; icon: any }[] = [
+  { key: 'proteus', label: 'PROTEUS Hero', desc: 'Molecular Lens & Reveal', icon: Atom },
   { key: 'beginner', label: 'Beginner & Presets Hub', desc: 'Layman Science & 1-Click Tours', icon: Compass },
   { key: 'executive', label: 'Executive Dashboard', desc: 'System & GPU Health', icon: Activity },
   { key: 'workspace', label: 'Discovery Pipeline', desc: '8-Stage Workflow', icon: Zap },

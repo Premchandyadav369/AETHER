@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTab, SectionTab } from './TabContext';
+import ProteinHero from './components/proteus/ProteinHero';
 import BeginnerGuideHub from './components/BeginnerGuideHub';
 import ExecutiveDashboard from './components/ExecutiveDashboard';
 import PipelineWorkspace from './components/PipelineWorkspace';
@@ -31,7 +32,7 @@ import CommandPalette from './components/CommandPalette';
 import { Sparkles, Command, HelpCircle, Bot, Zap, ArrowRight } from 'lucide-react';
 
 export default function MainPage() {
-  const { activeTab, setActiveTab, userMode, setUserMode, setIsCommandPaletteOpen, setIsCopilotOpen } = useTab();
+  const { activeTab, setActiveTab, userMode, setUserMode, setIsCommandPaletteOpen, setIsCopilotOpen, setSelectedProtein } = useTab();
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-16">
@@ -94,6 +95,14 @@ export default function MainPage() {
       )}
 
       {/* Render Active Workstation Module */}
+      {activeTab === 'proteus' && (
+        <ProteinHero
+          onExplore={(st) => {
+            setSelectedProtein(st.pdbId);
+            setActiveTab('proteins');
+          }}
+        />
+      )}
       {activeTab === 'beginner' && <BeginnerGuideHub />}
       {activeTab === 'executive' && <ExecutiveDashboard />}
       {activeTab === 'workspace' && <PipelineWorkspace />}

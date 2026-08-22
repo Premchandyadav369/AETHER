@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type SectionTab = 
+  | 'proteus'
   | 'beginner'
   | 'executive'
   | 'workspace'
